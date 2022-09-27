@@ -1,6 +1,8 @@
 package baguchan.armored_redstone;
 
 import baguchan.armored_redstone.message.ArmorAttackMessage;
+import baguchan.armored_redstone.message.FinishDushAttackMessage;
+import baguchan.armored_redstone.message.StartDushAttackMessage;
 import baguchan.armored_redstone.register.ModEntities;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -48,6 +50,14 @@ public class ArmoredRedstone
         CHANNEL.messageBuilder(ArmorAttackMessage.class, 0)
                 .encoder(ArmorAttackMessage::serialize).decoder(ArmorAttackMessage::deserialize)
                 .consumerMainThread(ArmorAttackMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(StartDushAttackMessage.class, 1)
+                .encoder(StartDushAttackMessage::serialize).decoder(StartDushAttackMessage::deserialize)
+                .consumerMainThread(StartDushAttackMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(FinishDushAttackMessage.class, 2)
+                .encoder(FinishDushAttackMessage::serialize).decoder(FinishDushAttackMessage::deserialize)
+                .consumerMainThread(FinishDushAttackMessage::handle)
                 .add();
     }
 

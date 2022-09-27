@@ -7,21 +7,24 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
 
-public class PistonArmorEntity extends BaseArmorEntity{
+public class PistonArmorEntity extends BaseArmorEntity {
 	private static final EntityDataAccessor<Integer> DATA_ATTACK = SynchedEntityData.defineId(PistonArmorEntity.class, EntityDataSerializers.INT);
+
+	public final AnimationState attackAnimationState = new AnimationState();
+	public final AnimationState attackFinishedAnimationState = new AnimationState();
+
 
 	public PistonArmorEntity(EntityType<? extends PistonArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
@@ -36,7 +39,14 @@ public class PistonArmorEntity extends BaseArmorEntity{
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_ATTACK.equals(p_21104_)) {
-			if(this.getAttackTick() == 1){
+			if (this.getAttackTick() == 24) {
+				this.attackFinishedAnimationState.start(this.tickCount);
+				this.attackAnimationState.stop();
+			}
+
+			if (this.getAttackTick() == 1) {
+				this.attackAnimationState.start(this.tickCount);
+				this.attackFinishedAnimationState.stop();
 				this.playSound(SoundEvents.PISTON_CONTRACT, 1.1F, 1.15F);
 			}
 		}
@@ -72,6 +82,7 @@ public class PistonArmorEntity extends BaseArmorEntity{
 
 	@OnlyIn(Dist.CLIENT)
 	protected void updateClientControls() {
+		super.updateClientControls();
 		Minecraft mc = Minecraft.getInstance();
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
@@ -83,6 +94,7 @@ public class PistonArmorEntity extends BaseArmorEntity{
 			}
 		}
 	}
+
 
 	public void setAttackTick(int attackTick) {
 		this.entityData.set(DATA_ATTACK, attackTick);
@@ -101,6 +113,6 @@ public class PistonArmorEntity extends BaseArmorEntity{
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.STEP_HEIGHT_ADDITION.get(), 1.0F).add(Attributes.ARMOR, 12.0F).add(Attributes.ARMOR_TOUGHNESS, 1.0F).add(Attributes.MOVEMENT_SPEED, 0.26D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 12.0D).add(Attributes.ATTACK_KNOCKBACK, 1.75D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 10.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
 	}
 }

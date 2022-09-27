@@ -15,7 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModEntities {
 	public static final DeferredRegister<EntityType<?>> ENTITIES_REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ArmoredRedstone.MODID);
 
-	public static final RegistryObject<EntityType<PistonArmorEntity>> PISTON_ARMOR = ENTITIES_REGISTRY.register("piston_armor", () -> EntityType.Builder.of(PistonArmorEntity::new, MobCategory.MISC).sized(0.9F, 1.75F).build(prefix("piston_armor")));
+	public static final RegistryObject<EntityType<PistonArmorEntity>> PISTON_ARMOR = ENTITIES_REGISTRY.register("piston_armor", () -> EntityType.Builder.of(PistonArmorEntity::new, MobCategory.MISC).sized(1.3F, 2.0F).build(prefix("piston_armor")));
 
 	private static String prefix(String path) {
 		return ArmoredRedstone.MODID + "." + path;
