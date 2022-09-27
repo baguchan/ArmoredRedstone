@@ -75,7 +75,7 @@ public class PistonArmorModel<T extends PistonArmorEntity> extends HierarchicalM
 		PartDefinition RightHand = partdefinition.addOrReplaceChild("RightHand", CubeListBuilder.create().texOffs(0, 27).addBox(-5.0F, -1.0F, -2.5F, 5.0F, 2.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-6.0F, 7.0F, 1.0F, 0.0F, 0.0F, 0.3054F));
 
 		PartDefinition right_hand = RightHand.addOrReplaceChild("right_hand", CubeListBuilder.create().texOffs(50, 0).addBox(-3.5F, 6.0F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F))
-				.texOffs(57, 6).addBox(-3.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F))
+				.texOffs(54, 48).addBox(-3.0F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, new CubeDeformation(0.0F))
 				.texOffs(26, 41).addBox(-4.0F, 5.5F, -6.0F, 4.0F, 4.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition piston_right = right_hand.addOrReplaceChild("piston_right", CubeListBuilder.create().texOffs(28, 33).addBox(-1.0F, -1.0F, -1.25F, 2.0F, 2.0F, 6.0F, new CubeDeformation(0.0F))
