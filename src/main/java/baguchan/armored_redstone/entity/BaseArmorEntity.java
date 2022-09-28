@@ -38,7 +38,7 @@ import java.util.UUID;
 
 public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumping {
 	private static final UUID SPEED_MODIFIER_EXTRA_SPRINTING_UUID = UUID.fromString("d4c7a47d-709e-9722-a10c-91cc76449c88");
-	private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 0.8F, AttributeModifier.Operation.MULTIPLY_TOTAL);
+	private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 0.9F, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
 	protected boolean isJumping;
 	protected float playerJumpPendingScale;
@@ -76,6 +76,24 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		}
 	}
 
+	public boolean causeFallDamage(float p_149499_, float p_149500_, DamageSource p_149501_) {
+
+		int i = this.calculateFallDamage(p_149499_, p_149500_);
+		if (i <= 0) {
+			return false;
+		} else {
+			this.hurt(p_149501_, (float) i);
+			if (this.isVehicle()) {
+				for (Entity entity : this.getIndirectPassengers()) {
+					entity.hurt(p_149501_, (float) i);
+				}
+			}
+
+			this.playBlockFallSound();
+			return true;
+		}
+	}
+
 	@Override
 	protected int calculateFallDamage(float p_21237_, float p_21238_) {
 		return super.calculateFallDamage(p_21237_, p_21238_) - 6;
@@ -102,10 +120,14 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	}
 
 	private boolean isMoving() {
-		return this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D;
+		return canDashWithWall() || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D;
 	}
 
-	public boolean canStepUp() {
+	protected boolean canDashWithWall() {
+		return false;
+	}
+
+	protected boolean canStepUp() {
 		return true;
 	}
 
@@ -347,9 +369,6 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	}
 
 	public float hurtRider(DamageSource damageSource, float damage) {
-		if (damageSource.isFall()) {
-			return damage * 0.25F;
-		}
 
 		if (damageSource.isExplosion()) {
 			return damage * 0.95F;

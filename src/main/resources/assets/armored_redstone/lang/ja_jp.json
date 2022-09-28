@@ -1,0 +1,6 @@
+{
+  "death.attack.armored_redstone.onFire": "%1$sは、%2$sに燃やされた",
+  "death.attack.armored_redstone.onFire.player": "%1$sは、%3$sの%2$sに燃やされた",
+  "entity.armored_redstone.fire_armor": "ファイアアーマー",
+  "entity.armored_redstone.piston_armor": "ピストンアーマー"
+}

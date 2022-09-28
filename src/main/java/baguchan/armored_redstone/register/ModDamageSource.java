@@ -7,6 +7,6 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class ModDamageSource {
 	public static DamageSource fire(BaseArmorEntity p_19350_, LivingEntity controllingPassenger) {
-		return (new IndirectEntityDamageSource("armored_redstone.onFire", p_19350_, controllingPassenger)).setIsFire();
+		return controllingPassenger != null ? (new IndirectEntityDamageSource("armored_redstone.onFire", p_19350_, controllingPassenger)).setIsFire() : (new IndirectEntityDamageSource("armored_redstone.onFire.player", p_19350_, controllingPassenger)).setIsFire();
 	}
 }

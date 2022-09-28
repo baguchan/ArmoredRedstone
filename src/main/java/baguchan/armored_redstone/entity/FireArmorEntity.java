@@ -134,9 +134,15 @@ public class FireArmorEntity extends BaseArmorEntity {
 			} else if (isFireAttack()) {
 				ArmoredRedstone.CHANNEL.sendToServer(new FireArmorStopAttackMessage(this));
 			}
+		} else if (isFireAttack()) {
+			ArmoredRedstone.CHANNEL.sendToServer(new FireArmorStopAttackMessage(this));
 		}
 	}
 
+	@Override
+	public boolean isInLava() {
+		return super.isInLava();
+	}
 
 	public void setFireAttack(boolean attack) {
 		this.entityData.set(DATA_FIRE_ATTACK, attack);
