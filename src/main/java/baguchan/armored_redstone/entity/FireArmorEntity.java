@@ -107,7 +107,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 				double dz = look.z();
 
 				double spread = 5 + this.getRandom().nextDouble() * 2.5;
-				double velocity = 0.15 + this.getRandom().nextDouble() * 0.15;
+				double velocity = 0.2 + this.getRandom().nextDouble() * 0.15;
 
 				dx += this.getRandom().nextGaussian() * 0.0075D * spread;
 				dy += this.getRandom().nextGaussian() * 0.0075D * spread;

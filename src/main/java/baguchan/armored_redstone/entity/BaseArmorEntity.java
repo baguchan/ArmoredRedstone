@@ -101,8 +101,8 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		}
 	}
 
-	private boolean isMovingOnLand() {
-		return this.onGround && this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D;
+	private boolean isMoving() {
+		return this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D;
 	}
 
 	public boolean canStepUp() {
@@ -115,9 +115,9 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		Minecraft mc = Minecraft.getInstance();
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
-			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMovingOnLand()) {
+			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving()) {
 				dushStart();
-			} else if (this.isSprinting() && (!mc.options.keyUp.isDown() || !this.isMovingOnLand())) {
+			} else if (this.isSprinting() && (!mc.options.keyUp.isDown() || !this.isMoving())) {
 				dushFinish();
 			}
 		} else {
