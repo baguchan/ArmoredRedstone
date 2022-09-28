@@ -2,6 +2,7 @@ package baguchan.armored_redstone.entity;
 
 import baguchan.armored_redstone.ArmoredRedstone;
 import baguchan.armored_redstone.message.ArmorAttackMessage;
+import baguchan.armored_redstone.register.ModKeyMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -83,7 +84,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
 
-			if (mc.options.keyAttack.isDown()) {
+			if (ModKeyMappings.keyFire.isDown()) {
 				if (this.getAttackTick() == 0) {
 					attackingStart();
 				}

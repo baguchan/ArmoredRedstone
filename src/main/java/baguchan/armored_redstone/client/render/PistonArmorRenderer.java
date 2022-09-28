@@ -28,7 +28,7 @@ public class PistonArmorRenderer<T extends PistonArmorEntity> extends MobRendere
 			p_114488_.pushPose();
 			Vec3 vec3d = p_114485_.getViewVector(1.0F);
 			AABB aabb = p_114485_.getAttackBoundingBox().move(-p_114485_.getX(), -p_114485_.getY(), -p_114485_.getZ());
-			LevelRenderer.renderLineBox(p_114488_, p_114489_.getBuffer(RenderType.lines()), aabb, 1.0F, 0.8F, 0.8F, 1.0F);
+			LevelRenderer.renderLineBox(p_114488_, p_114489_.getBuffer(RenderType.lines()), aabb, 1.0F, 1.0F, 0.5F, 1.0F);
 			p_114488_.popPose();
 		}
 		super.render(p_114485_, p_114486_, p_114487_, p_114488_, p_114489_, p_114490_);

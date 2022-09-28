@@ -3,8 +3,8 @@ package baguchan.armored_redstone.client.model;// Made with Blockbench 4.4.1
 // Paste this class into your mod and generate all required imports
 
 
-import baguchan.armored_redstone.client.animation.PistonArmorAnimation;
-import baguchan.armored_redstone.entity.BaseArmorEntity;
+import baguchan.armored_redstone.client.animation.FireArmorAnimation;
+import baguchan.armored_redstone.entity.FireArmorEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -15,13 +15,13 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
-public class FireArmorModel<T extends BaseArmorEntity> extends HierarchicalModel<T> {
+public class FireArmorModel<T extends FireArmorEntity> extends HierarchicalModel<T> {
 	private final ModelPart root;
 	private final ModelPart RightLeg;
 	private final ModelPart LeftLeg;
 	private final ModelPart body;
 	private final ModelPart RightHand;
-	private final ModelPart Lefthand;
+	private final ModelPart LeftHand;
 
 	public FireArmorModel(ModelPart root) {
 		this.root = root;
@@ -29,7 +29,7 @@ public class FireArmorModel<T extends BaseArmorEntity> extends HierarchicalModel
 		this.LeftLeg = root.getChild("LeftLeg");
 		this.body = root.getChild("body");
 		this.RightHand = root.getChild("RightHand");
-		this.Lefthand = root.getChild("Lefthand");
+		this.LeftHand = root.getChild("LeftHand");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -76,7 +76,7 @@ public class FireArmorModel<T extends BaseArmorEntity> extends HierarchicalModel
 				.texOffs(50, 9).addBox(-4.5F, -6.0F, -1.5F, 3.0F, 3.0F, 3.0F, new CubeDeformation(0.0F))
 				.texOffs(39, 31).addBox(-5.0F, -2.0F, -1.0F, 6.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-7.0F, 10.0F, 0.0F, -0.4363F, 0.0F, 0.0F));
 
-		PartDefinition Lefthand = partdefinition.addOrReplaceChild("Lefthand", CubeListBuilder.create().texOffs(54, 1).addBox(-1.5F, -2.0F, -1.5F, 1.0F, 5.0F, 3.0F, new CubeDeformation(0.0F))
+		PartDefinition LeftHand = partdefinition.addOrReplaceChild("LeftHand", CubeListBuilder.create().texOffs(54, 1).addBox(-1.5F, -2.0F, -1.5F, 1.0F, 5.0F, 3.0F, new CubeDeformation(0.0F))
 				.texOffs(0, 30).addBox(-5.0F, -3.0F, -2.0F, 4.0F, 7.0F, 4.0F, new CubeDeformation(0.0F))
 				.texOffs(30, 50).addBox(-4.0F, 8.0F, -1.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
 				.texOffs(26, 43).addBox(-4.5F, 4.0F, -1.5F, 3.0F, 4.0F, 3.0F, new CubeDeformation(0.0F))
@@ -89,8 +89,8 @@ public class FireArmorModel<T extends BaseArmorEntity> extends HierarchicalModel
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		this.animate(entity.attackAnimationState, PistonArmorAnimation.ATTACK, ageInTicks);
-		this.animate(entity.attackFinishedAnimationState, PistonArmorAnimation.ATTACKFINISH, ageInTicks);
+		this.animate(entity.attackAnimationState, FireArmorAnimation.ATTACK, ageInTicks);
+		this.animate(entity.attackFinishedAnimationState, FireArmorAnimation.ATTACKFINISH, ageInTicks);
 		if (!entity.isSprinting() && entity.isOnGround()) {
 			this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.2F * limbSwingAmount;
 			this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.2F * limbSwingAmount;

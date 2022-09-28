@@ -115,9 +115,9 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		Minecraft mc = Minecraft.getInstance();
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
-			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown()) {
+			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMovingOnLand()) {
 				dushStart();
-			} else if (this.isSprinting() && !mc.options.keyUp.isDown()) {
+			} else if (this.isSprinting() && (!mc.options.keyUp.isDown() || !this.isMovingOnLand())) {
 				dushFinish();
 			}
 		} else {
@@ -170,7 +170,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 
 	public AABB getAttackBoundingBox() {
 		Vec3 vec3d = this.getViewVector(1.0F);
-		return this.getBoundingBox().expandTowards(0, -(this.getBbHeight() - this.getBbWidth()), 0).inflate(1.0D, 1.0D, 1.0D).move(vec3d.x * 1.65D, vec3d.y * 1.65D, vec3d.z * 1.65D);
+		return this.getBoundingBox().contract(0, -(this.getBbHeight() - this.getBbWidth()), 0).inflate(1.0D, 1.0D, 1.0D).move(vec3d.x * 1.65D, vec3d.y * 1.65D, vec3d.z * 1.65D);
 	}
 
 	private void dash() {

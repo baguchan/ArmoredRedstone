@@ -4,6 +4,7 @@ import baguchan.armored_redstone.ArmoredRedstone;
 import baguchan.armored_redstone.message.ArmorAttackMessage;
 import baguchan.armored_redstone.message.FireArmorStopAttackMessage;
 import baguchan.armored_redstone.register.ModDamageSource;
+import baguchan.armored_redstone.register.ModKeyMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -11,7 +12,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -28,10 +28,6 @@ import net.minecraftforge.common.ForgeMod;
 public class FireArmorEntity extends BaseArmorEntity {
 	private static final EntityDataAccessor<Boolean> DATA_FIRE_ATTACK = SynchedEntityData.defineId(FireArmorEntity.class, EntityDataSerializers.BOOLEAN);
 
-	public final AnimationState attackAnimationState = new AnimationState();
-	public final AnimationState attackFinishedAnimationState = new AnimationState();
-
-
 	public FireArmorEntity(EntityType<? extends FireArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
 	}
@@ -45,7 +41,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_FIRE_ATTACK.equals(p_21104_)) {
-			if (!this.isFireAttack()) {
+			if (this.isFireAttack()) {
 				this.attackFinishedAnimationState.start(this.tickCount);
 				this.attackAnimationState.stop();
 			} else {
@@ -73,12 +69,9 @@ public class FireArmorEntity extends BaseArmorEntity {
 		// when breathing fire, spew particles
 		if (this.isFireAttack()) {
 			this.addFireParticle();
-
-			Vec3 vec3d = this.getViewVector(1.0F);
-
 			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getFireBoundingBox())) {
 				if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
-					entity.hurt(ModDamageSource.fire(this, entity), 8.0F);
+					entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 8.0F);
 					entity.setSecondsOnFire(8);
 				}
 			}
@@ -90,22 +83,23 @@ public class FireArmorEntity extends BaseArmorEntity {
 
 	public AABB getFireBoundingBox() {
 		Vec3 vec3d = this.getViewVector(1.0F);
-		return this.getBoundingBox().expandTowards(0, -(this.getBbHeight() - this.getBbWidth()), 0).expandTowards(vec3d.x * 1.5D, vec3d.y * 1.5D, vec3d.z * 1.5D).move(vec3d.x * 1.6D, vec3d.y * 1.6D, vec3d.z * 1.6D);
+		return this.getBoundingBox().contract(0, -(this.getBbHeight() - this.getBbWidth()), 0).expandTowards(vec3d.x * 4.0D, vec3d.y * 4.0D, vec3d.z * 4.0D).move(vec3d.x * 1.6D, vec3d.y * 1.6D, vec3d.z * 1.6D);
 	}
 
 	private void addFireParticle() {
 
-		double dist = 0.9;
+		double dist = 1.5;
 		for (int i2 = 0; i2 < 2; i2++) {
 			Vec3 look = this.getLookAngle();
 
 			float f14 = this.getYRot() * ((float) Math.PI / 180F);
 			float f2 = Mth.sin(f14);
 			float f15 = Mth.cos(f14);
+			float direct = i2 == 0 ? -1.0F : 1.0F;
 
-			double px = this.getX() + f15 * 0.5F + look.x() * dist;
+			double px = this.getX() + f15 * 1.4F * direct + look.x() * dist;
 			double py = this.getY() + this.getEyeHeight() + look.y() * dist;
-			double pz = this.getZ() + f15 * -0.5F + look.z() * dist;
+			double pz = this.getZ() + f2 * 1.4F * direct + look.z() * dist;
 
 			for (int i = 0; i < 2; i++) {
 				double dx = look.x();
@@ -135,7 +129,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
 
-			if (mc.options.keyUse.isDown()) {
+			if (ModKeyMappings.keyFire.isDown()) {
 				attackingStart();
 			} else if (isFireAttack()) {
 				ArmoredRedstone.CHANNEL.sendToServer(new FireArmorStopAttackMessage(this));
