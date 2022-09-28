@@ -13,6 +13,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,10 +40,12 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	private static final UUID SPEED_MODIFIER_EXTRA_SPRINTING_UUID = UUID.fromString("d4c7a47d-709e-9722-a10c-91cc76449c88");
 	private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 0.8F, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
-
 	protected boolean isJumping;
 	protected float playerJumpPendingScale;
 	private boolean allowStandSliding;
+
+	public final AnimationState attackAnimationState = new AnimationState();
+	public final AnimationState attackFinishedAnimationState = new AnimationState();
 
 	protected BaseArmorEntity(EntityType<? extends BaseArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
@@ -116,6 +120,10 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 			} else if (this.isSprinting() && !mc.options.keyUp.isDown()) {
 				dushFinish();
 			}
+		} else {
+			if (this.isSprinting()) {
+				dushFinish();
+			}
 		}
 	}
 
@@ -153,12 +161,17 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 
 	@Override
 	public double getPassengersRidingOffset() {
-		return (double) this.getDimensions(this.getPose()).height * 0.85D;
+		return (double) this.getDimensions(this.getPose()).height * 0.75D;
 	}
 
 	public abstract void attack();
 
 	public abstract void secondAttack();
+
+	public AABB getAttackBoundingBox() {
+		Vec3 vec3d = this.getViewVector(1.0F);
+		return this.getBoundingBox().expandTowards(0, -(this.getBbHeight() - this.getBbWidth()), 0).inflate(1.0D, 1.0D, 1.0D).move(vec3d.x * 1.65D, vec3d.y * 1.65D, vec3d.z * 1.65D);
+	}
 
 	private void dash() {
 		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.75D, 0.0D, 0.75D))) {
@@ -352,5 +365,20 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		}
 
 		return super.doHurtTarget(p_21372_);
+	}
+
+	@Override
+	public boolean canBeLeashed(Player p_21418_) {
+		return false;
+	}
+
+	@Override
+	protected boolean shouldDespawnInPeaceful() {
+		return false;
+	}
+
+	@Override
+	public boolean removeWhenFarAway(double p_21542_) {
+		return false;
 	}
 }

@@ -1,6 +1,7 @@
 package baguchan.armored_redstone.register;
 
 import baguchan.armored_redstone.ArmoredRedstone;
+import baguchan.armored_redstone.entity.FireArmorEntity;
 import baguchan.armored_redstone.entity.PistonArmorEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -15,7 +16,9 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModEntities {
 	public static final DeferredRegister<EntityType<?>> ENTITIES_REGISTRY = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ArmoredRedstone.MODID);
 
-	public static final RegistryObject<EntityType<PistonArmorEntity>> PISTON_ARMOR = ENTITIES_REGISTRY.register("piston_armor", () -> EntityType.Builder.of(PistonArmorEntity::new, MobCategory.MISC).sized(1.3F, 2.0F).build(prefix("piston_armor")));
+	public static final RegistryObject<EntityType<PistonArmorEntity>> PISTON_ARMOR = ENTITIES_REGISTRY.register("piston_armor", () -> EntityType.Builder.of(PistonArmorEntity::new, MobCategory.MISC).sized(1.3F, 2.5F).build(prefix("piston_armor")));
+	public static final RegistryObject<EntityType<FireArmorEntity>> FIRE_ARMOR = ENTITIES_REGISTRY.register("fire_armor", () -> EntityType.Builder.of(FireArmorEntity::new, MobCategory.MISC).sized(1.3F, 2.5F).fireImmune().build(prefix("fire_armor")));
+
 
 	private static String prefix(String path) {
 		return ArmoredRedstone.MODID + "." + path;
@@ -24,5 +27,6 @@ public class ModEntities {
 	@SubscribeEvent
 	public static void registerEntity(EntityAttributeCreationEvent event) {
 		event.put(PISTON_ARMOR.get(), PistonArmorEntity.createAttributes().build());
+		event.put(FIRE_ARMOR.get(), FireArmorEntity.createAttributes().build());
 	}
 }

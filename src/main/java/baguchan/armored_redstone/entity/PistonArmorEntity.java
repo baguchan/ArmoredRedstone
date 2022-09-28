@@ -7,7 +7,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
@@ -21,9 +20,6 @@ import net.minecraftforge.common.ForgeMod;
 
 public class PistonArmorEntity extends BaseArmorEntity {
 	private static final EntityDataAccessor<Integer> DATA_ATTACK = SynchedEntityData.defineId(PistonArmorEntity.class, EntityDataSerializers.INT);
-
-	public final AnimationState attackAnimationState = new AnimationState();
-	public final AnimationState attackFinishedAnimationState = new AnimationState();
 
 
 	public PistonArmorEntity(EntityType<? extends PistonArmorEntity> p_20966_, Level p_20967_) {
@@ -64,7 +60,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 	public void attack() {
 		Vec3 vec3d = this.getViewVector(1.0F);
 		if (this.getAttackTick() == 0) {
-			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.75D, 0.25D, 0.75D).move(vec3d.x * 1.6D, vec3d.y * 1.6D, vec3d.z * 1.6D))) {
+			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getAttackBoundingBox())) {
 				if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
 					this.doHurtTarget(entity);
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
@@ -113,6 +109,6 @@ public class PistonArmorEntity extends BaseArmorEntity {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 10.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 15.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
 	}
 }

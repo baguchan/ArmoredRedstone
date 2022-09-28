@@ -2,8 +2,8 @@ package baguchan.armored_redstone.client.render;
 
 import baguchan.armored_redstone.ArmoredRedstone;
 import baguchan.armored_redstone.client.ModModelLayers;
-import baguchan.armored_redstone.client.model.PistonArmorModel;
-import baguchan.armored_redstone.entity.PistonArmorEntity;
+import baguchan.armored_redstone.client.model.FireArmorModel;
+import baguchan.armored_redstone.entity.FireArmorEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -15,11 +15,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class PistonArmorRenderer<T extends PistonArmorEntity> extends MobRenderer<T, PistonArmorModel<T>> {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/piston_armor.png");
+public class FireArmorRenderer<T extends FireArmorEntity> extends MobRenderer<T, FireArmorModel<T>> {
+	private static final ResourceLocation TEXTURES = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/fire_armor.png");
 
-	public PistonArmorRenderer(EntityRendererProvider.Context context) {
-		super(context, new PistonArmorModel<>(context.bakeLayer(ModModelLayers.PISTON_ARMOR)), 0.75F);
+	public FireArmorRenderer(EntityRendererProvider.Context context) {
+		super(context, new FireArmorModel<>(context.bakeLayer(ModModelLayers.FIRE_ARMOR)), 0.75F);
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class PistonArmorRenderer<T extends PistonArmorEntity> extends MobRendere
 		if (Minecraft.getInstance().getEntityRenderDispatcher().shouldRenderHitBoxes()) {
 			p_114488_.pushPose();
 			Vec3 vec3d = p_114485_.getViewVector(1.0F);
-			AABB aabb = p_114485_.getAttackBoundingBox().move(-p_114485_.getX(), -p_114485_.getY(), -p_114485_.getZ());
+			AABB aabb = p_114485_.getFireBoundingBox().move(-p_114485_.getX(), -p_114485_.getY(), -p_114485_.getZ());
 			LevelRenderer.renderLineBox(p_114488_, p_114489_.getBuffer(RenderType.lines()), aabb, 1.0F, 0.8F, 0.8F, 1.0F);
 			p_114488_.popPose();
 		}
