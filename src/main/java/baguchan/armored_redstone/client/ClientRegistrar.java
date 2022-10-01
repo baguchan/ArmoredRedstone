@@ -5,6 +5,7 @@ import baguchan.armored_redstone.client.model.FireArmorModel;
 import baguchan.armored_redstone.client.model.PistonArmorModel;
 import baguchan.armored_redstone.client.render.FireArmorRenderer;
 import baguchan.armored_redstone.client.render.PistonArmorRenderer;
+import baguchan.armored_redstone.client.render.SoulFireArmorRenderer;
 import baguchan.armored_redstone.register.ModEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,6 +20,7 @@ public class ClientRegistrar {
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
 		event.registerEntityRenderer(ModEntities.PISTON_ARMOR.get(), PistonArmorRenderer::new);
 		event.registerEntityRenderer(ModEntities.FIRE_ARMOR.get(), FireArmorRenderer::new);
+		event.registerEntityRenderer(ModEntities.SOUL_FIRE_ARMOR.get(), SoulFireArmorRenderer::new);
 	}
 
 	@SubscribeEvent

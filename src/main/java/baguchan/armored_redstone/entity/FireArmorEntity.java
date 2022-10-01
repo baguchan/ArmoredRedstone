@@ -69,16 +69,20 @@ public class FireArmorEntity extends BaseArmorEntity {
 		// when breathing fire, spew particles
 		if (this.isFireAttack()) {
 			this.addFireParticle();
-			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getFireBoundingBox())) {
-				if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
-					entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 8.0F);
-					entity.setSecondsOnFire(8);
-				}
-			}
+			this.fireAttack();
 
-			playSound(SoundEvents.FIRECHARGE_USE, this.getRandom().nextFloat() * 0.5F, this.getRandom().nextFloat() * 0.5F);
 			this.gameEvent(GameEvent.PROJECTILE_SHOOT);
 		}
+	}
+
+	public void fireAttack() {
+		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getFireBoundingBox())) {
+			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
+				entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 8.0F);
+				entity.setSecondsOnFire(8);
+			}
+		}
+		playSound(SoundEvents.FIRECHARGE_USE, this.getRandom().nextFloat() * 0.5F, this.getRandom().nextFloat() * 0.5F);
 	}
 
 	public AABB getFireBoundingBox() {
@@ -86,7 +90,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 		return this.getBoundingBox().contract(0, -(this.getBbHeight() - this.getBbWidth()), 0).expandTowards(vec3d.x * 4.0D, vec3d.y * 4.0D, vec3d.z * 4.0D).move(vec3d.x * 1.6D, vec3d.y * 1.6D, vec3d.z * 1.6D);
 	}
 
-	private void addFireParticle() {
+	public void addFireParticle() {
 
 		double dist = 1.5;
 		for (int i2 = 0; i2 < 2; i2++) {

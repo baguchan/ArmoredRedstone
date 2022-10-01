@@ -137,7 +137,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		Minecraft mc = Minecraft.getInstance();
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
-			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving()) {
+			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving() && this.isOnGround()) {
 				dushStart();
 			} else if (this.isSprinting() && (!mc.options.keyUp.isDown() || !this.isMoving())) {
 				dushFinish();
@@ -198,7 +198,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	private void dash() {
 		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.75D, 0.0D, 0.75D))) {
 			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
-				if (entity.hurt(DamageSource.mobAttack(this), 8.0F)) {
+				if (entity.hurt(DamageSource.mobAttack(this), 7.0F)) {
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 					if (entity instanceof LivingEntity) {
 						double d1 = entity.getX() - this.getX();
@@ -330,7 +330,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 
 	@Override
 	public boolean canJump() {
-		return !this.isSprinting();
+		return true;
 	}
 
 	@Override
