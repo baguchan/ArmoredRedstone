@@ -97,7 +97,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 
 	@Override
 	protected int calculateFallDamage(float p_21237_, float p_21238_) {
-		return super.calculateFallDamage(p_21237_, p_21238_) - 6;
+		return super.calculateFallDamage(p_21237_, p_21238_) - 10;
 	}
 
 	@Override

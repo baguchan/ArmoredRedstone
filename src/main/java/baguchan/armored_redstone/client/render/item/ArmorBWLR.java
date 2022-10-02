@@ -18,8 +18,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class ArmorBWLR extends BlockEntityWithoutLevelRenderer {
-	private static final ResourceLocation TEXTURES = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/fire_armor.png");
-	private static final ResourceLocation TEXTURES_FIRE = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/piston_armor.png");
+	private static final ResourceLocation TEXTURES = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/piston_armor.png");
+	private static final ResourceLocation TEXTURES_FIRE = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/fire_armor.png");
 	private static final ResourceLocation TEXTURES_SOUL = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/soul_armor.png");
 
 	private PistonArmorModel<?> entityModel;
@@ -39,18 +39,21 @@ public class ArmorBWLR extends BlockEntityWithoutLevelRenderer {
 			if (pStack.is(ModItems.PISTON_ARMOR.get())) {
 				pPoseStack.pushPose();
 				pPoseStack.scale(1.0F, -1.0F, -1.0F);
+				pPoseStack.translate(0.65F, -0.65F, 0);
 				VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(TEXTURES));
 				this.entityModel.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, pOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
 				pPoseStack.popPose();
 			} else if (pStack.is(ModItems.FIRE_ARMOR.get())) {
 				pPoseStack.pushPose();
 				pPoseStack.scale(1.0F, -1.0F, -1.0F);
+				pPoseStack.translate(0.65F, -0.65F, 0);
 				VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(TEXTURES_FIRE));
 				this.entityModelFire.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, pOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
 				pPoseStack.popPose();
 			} else if (pStack.is(ModItems.SOUL_FIRE_ARMOR.get())) {
 				pPoseStack.pushPose();
 				pPoseStack.scale(1.0F, -1.0F, -1.0F);
+				pPoseStack.translate(0.65F, -0.65F, 0);
 				VertexConsumer vertexconsumer = pBuffer.getBuffer(RenderType.entityTranslucentCull(TEXTURES_SOUL));
 				this.entityModelSoul.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, pOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
 				pPoseStack.popPose();

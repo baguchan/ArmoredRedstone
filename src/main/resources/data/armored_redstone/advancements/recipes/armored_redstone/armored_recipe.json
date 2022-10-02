@@ -63,7 +63,12 @@
   ],
   "rewards": {
     "recipes": [
-      "tofucraft:agedashi_tofu"
+      "armored_redstone:conveyor",
+      "armored_redstone:gold_conveyor",
+      "armored_redstone:netherite_conveyor",
+      "armored_redstone:piston_armor",
+      "armored_redstone:fire_armor",
+      "armored_redstone:soul_fire_armor"
     ]
   }
 }
