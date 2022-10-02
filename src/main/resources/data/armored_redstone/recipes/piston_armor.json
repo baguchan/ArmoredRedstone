@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "C": {
+      "item": "armored_redstone:conveyor"
+    }
+  },
+  "pattern": [
+    "IRI",
+    "PBP",
+    "CBC"
+  ],
+  "result": {
+    "item": "armored_redstone:piston_armor"
+  }
+}

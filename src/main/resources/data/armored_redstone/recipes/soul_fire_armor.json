@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:blaze_rod"
+    },
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "C": {
+      "item": "armored_redstone:netherite_conveyor"
+    },
+    "S": {
+      "item": "minecraft:soul_soil"
+    },
+    "B": {
+      "item": "minecraft:nether_bricks"
+    }
+  },
+  "pattern": [
+    "SRS",
+    "PBP",
+    "CBC"
+  ],
+  "result": {
+    "item": "armored_redstone:piston_armor"
+  }
+}

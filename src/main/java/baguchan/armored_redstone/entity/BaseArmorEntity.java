@@ -31,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidType;
 
 import javax.annotation.Nullable;
@@ -209,7 +210,9 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 						}
 
 						((LivingEntity) entity).knockback(1.0, d1, d0);
-						((LivingEntity) entity).lastHurtByPlayerTime = 100;
+						if (this.getControllingPassenger() instanceof Player) {
+							((LivingEntity) entity).setLastHurtByPlayer((Player) this.getControllingPassenger());
+						}
 					}
 				}
 			}
@@ -257,7 +260,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 					this.setDeltaMovement(Vec3.ZERO);
 				}
 
-				if (this.onGround) {
+				if (this.onGround || this.fireImmune() && this.canJumpOnLava() && this.isInFluidType(ForgeMod.LAVA_TYPE.get())) {
 					this.playerJumpPendingScale = 0.0F;
 					this.setIsJumping(false);
 				}
@@ -269,6 +272,10 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 				super.travel(p_30633_);
 			}
 		}
+	}
+
+	public boolean canJumpOnLava() {
+		return false;
 	}
 
 	@Nullable
@@ -380,7 +387,9 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	@Override
 	public boolean doHurtTarget(Entity p_21372_) {
 		if (p_21372_ instanceof LivingEntity) {
-			((LivingEntity) p_21372_).lastHurtByPlayerTime = 100;
+			if (this.getControllingPassenger() instanceof Player) {
+				((LivingEntity) p_21372_).setLastHurtByPlayer((Player) this.getControllingPassenger());
+			}
 		}
 
 		return super.doHurtTarget(p_21372_);

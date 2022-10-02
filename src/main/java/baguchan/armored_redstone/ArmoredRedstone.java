@@ -5,6 +5,7 @@ import baguchan.armored_redstone.message.FinishDushAttackMessage;
 import baguchan.armored_redstone.message.FireArmorStopAttackMessage;
 import baguchan.armored_redstone.message.StartDushAttackMessage;
 import baguchan.armored_redstone.register.ModEntities;
+import baguchan.armored_redstone.register.ModItems;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,7 +42,8 @@ public class ArmoredRedstone
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        ModEntities.ENTITIES_REGISTRY.register(modEventBus);
+		ModItems.ITEM_REGISTRY.register(modEventBus);
+		ModEntities.ENTITIES_REGISTRY.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

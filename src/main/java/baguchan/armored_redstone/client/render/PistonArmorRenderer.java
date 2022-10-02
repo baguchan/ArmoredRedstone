@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -18,8 +19,17 @@ import net.minecraft.world.phys.Vec3;
 public class PistonArmorRenderer<T extends PistonArmorEntity> extends MobRenderer<T, PistonArmorModel<T>> {
 	private static final ResourceLocation TEXTURES = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/piston_armor.png");
 
+	private static final RenderType GLOW = RenderType.eyes(new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/piston_armor_glow.png"));
+
+
 	public PistonArmorRenderer(EntityRendererProvider.Context context) {
 		super(context, new PistonArmorModel<>(context.bakeLayer(ModModelLayers.PISTON_ARMOR)), 0.75F);
+		this.addLayer(new EyesLayer<T, PistonArmorModel<T>>(this) {
+			@Override
+			public RenderType renderType() {
+				return GLOW;
+			}
+		});
 	}
 
 	@Override

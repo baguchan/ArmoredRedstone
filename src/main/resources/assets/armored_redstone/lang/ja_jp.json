@@ -1,6 +1,12 @@
 {
   "death.attack.armored_redstone.onFire": "%1$sは、%2$sに燃やされた",
   "death.attack.armored_redstone.onFire.player": "%1$sは、%3$sの%2$sに燃やされた",
+  "death.attack.armored_redstone.onSoul": "%1$sは、%2$sに魂ごと消された",
+  "death.attack.armored_redstone.onSoul.player": "%1$s、%2$sの%3$sに魂ごと消された",
   "entity.armored_redstone.fire_armor": "ファイアアーマー",
-  "entity.armored_redstone.piston_armor": "ピストンアーマー"
+  "entity.armored_redstone.soul_fire_armor": "ソウルファイアアーマー",
+  "entity.armored_redstone.piston_armor": "ピストンアーマー",
+  "item.armored_redstone.fire_armor": "ファイアアーマー",
+  "item.armored_redstone.soul_fire_armor": "ソウルファイアアーマー",
+  "item.armored_redstone.piston_armor": "ピストンアーマー"
 }

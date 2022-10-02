@@ -14,9 +14,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
@@ -80,6 +82,11 @@ public class FireArmorEntity extends BaseArmorEntity {
 			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
 				entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 8.0F);
 				entity.setSecondsOnFire(8);
+				if (entity instanceof LivingEntity) {
+					if (this.getControllingPassenger() instanceof Player) {
+						((LivingEntity) entity).setLastHurtByPlayer((Player) this.getControllingPassenger());
+					}
+				}
 			}
 		}
 		playSound(SoundEvents.FIRECHARGE_USE, this.getRandom().nextFloat() * 0.5F, this.getRandom().nextFloat() * 0.5F);
@@ -143,11 +150,6 @@ public class FireArmorEntity extends BaseArmorEntity {
 		}
 	}
 
-	@Override
-	public boolean isInLava() {
-		return super.isInLava();
-	}
-
 	public void setFireAttack(boolean attack) {
 		this.entityData.set(DATA_FIRE_ATTACK, attack);
 	}
@@ -159,7 +161,6 @@ public class FireArmorEntity extends BaseArmorEntity {
 	private void attackingStart() {
 		ArmoredRedstone.CHANNEL.sendToServer(new ArmorAttackMessage(this));
 	}
-
 
 	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 60.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.10F).add(Attributes.ARMOR, 8.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);

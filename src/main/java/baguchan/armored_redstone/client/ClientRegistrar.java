@@ -3,6 +3,7 @@ package baguchan.armored_redstone.client;
 import baguchan.armored_redstone.ArmoredRedstone;
 import baguchan.armored_redstone.client.model.FireArmorModel;
 import baguchan.armored_redstone.client.model.PistonArmorModel;
+import baguchan.armored_redstone.client.model.SoulArmorModel;
 import baguchan.armored_redstone.client.render.FireArmorRenderer;
 import baguchan.armored_redstone.client.render.PistonArmorRenderer;
 import baguchan.armored_redstone.client.render.SoulFireArmorRenderer;
@@ -27,6 +28,7 @@ public class ClientRegistrar {
 	public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
 		event.registerLayerDefinition(ModModelLayers.PISTON_ARMOR, PistonArmorModel::createBodyLayer);
 		event.registerLayerDefinition(ModModelLayers.FIRE_ARMOR, FireArmorModel::createBodyLayer);
+		event.registerLayerDefinition(ModModelLayers.SOUL_ARMOR, SoulArmorModel::createBodyLayer);
 	}
 
 }

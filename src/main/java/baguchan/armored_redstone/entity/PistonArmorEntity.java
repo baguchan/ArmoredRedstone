@@ -2,6 +2,7 @@ package baguchan.armored_redstone.entity;
 
 import baguchan.armored_redstone.ArmoredRedstone;
 import baguchan.armored_redstone.message.ArmorAttackMessage;
+import baguchan.armored_redstone.register.ModItems;
 import baguchan.armored_redstone.register.ModKeyMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -105,11 +107,15 @@ public class PistonArmorEntity extends BaseArmorEntity {
 		ArmoredRedstone.CHANNEL.sendToServer(new ArmorAttackMessage(this));
 	}
 
-	protected boolean isAttacked(){
+	protected boolean isAttacked() {
 		return getAttackTick() > 0;
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 15.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
+	}
+
+	public ItemStack getPickResult() {
+		return new ItemStack(ModItems.PISTON_ARMOR.get());
 	}
 }

@@ -11,15 +11,23 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.EyesLayer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class FireArmorRenderer<T extends FireArmorEntity> extends MobRenderer<T, FireArmorModel<T>> {
 	private static final ResourceLocation TEXTURES = new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/fire_armor.png");
+	private static final RenderType GLOW = RenderType.eyes(new ResourceLocation(ArmoredRedstone.MODID, "textures/entity/fire_armor_glow.png"));
 
 	public FireArmorRenderer(EntityRendererProvider.Context context) {
 		super(context, new FireArmorModel<>(context.bakeLayer(ModModelLayers.FIRE_ARMOR)), 0.75F);
+		this.addLayer(new EyesLayer<T, FireArmorModel<T>>(this) {
+			@Override
+			public RenderType renderType() {
+				return GLOW;
+			}
+		});
 	}
 
 	@Override

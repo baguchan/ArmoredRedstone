@@ -1,25 +1,43 @@
 package baguchan.armored_redstone.entity;
 
 import baguchan.armored_redstone.register.ModDamageSource;
+import baguchan.armored_redstone.register.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 
 public class SoulFireArmorEntity extends FireArmorEntity {
 	public SoulFireArmorEntity(EntityType<? extends FireArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
 	}
 
+	@Override
+	public boolean canJumpOnLava() {
+		return true;
+	}
+
 	public void fireAttack() {
 		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getFireBoundingBox())) {
 			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
-				entity.hurt(ModDamageSource.soul(this, this.getControllingPassenger()), 3.0F);
+				entity.hurt(ModDamageSource.soul(this, this.getControllingPassenger()), 4.0F);
 				entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 9.0F);
 				entity.setSecondsOnFire(8);
+				if (entity instanceof LivingEntity) {
+					if (this.getControllingPassenger() instanceof Player) {
+						((LivingEntity) entity).setLastHurtByPlayer((Player) this.getControllingPassenger());
+					}
+				}
 			}
 		}
 		playSound(SoundEvents.FIRECHARGE_USE, this.getRandom().nextFloat() * 0.5F, this.getRandom().nextFloat() * 0.5F);
@@ -63,5 +81,13 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 				}
 			}
 		}
+	}
+
+	public static AttributeSupplier.Builder createAttributes() {
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 120.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.10F).add(Attributes.ARMOR, 16.0F).add(Attributes.ARMOR_TOUGHNESS, 4.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
+	}
+
+	public ItemStack getPickResult() {
+		return new ItemStack(ModItems.SOUL_FIRE_ARMOR.get());
 	}
 }

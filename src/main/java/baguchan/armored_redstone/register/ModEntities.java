@@ -30,6 +30,6 @@ public class ModEntities {
 	public static void registerEntity(EntityAttributeCreationEvent event) {
 		event.put(PISTON_ARMOR.get(), PistonArmorEntity.createAttributes().build());
 		event.put(FIRE_ARMOR.get(), FireArmorEntity.createAttributes().build());
-		event.put(SOUL_FIRE_ARMOR.get(), FireArmorEntity.createAttributes().build());
+		event.put(SOUL_FIRE_ARMOR.get(), SoulFireArmorEntity.createAttributes().build());
 	}
 }
