@@ -30,14 +30,14 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 	public void fireAttack() {
 		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getFireBoundingBox())) {
 			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
-				entity.hurt(ModDamageSource.soul(this, this.getControllingPassenger()), 4.0F);
-				entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 9.0F);
-				entity.setSecondsOnFire(8);
 				if (entity instanceof LivingEntity) {
 					if (this.getControllingPassenger() instanceof Player) {
 						((LivingEntity) entity).setLastHurtByPlayer((Player) this.getControllingPassenger());
 					}
 				}
+				entity.setSecondsOnFire(8);
+				entity.hurt(ModDamageSource.soul(this, this.getControllingPassenger()), 4.0F);
+				entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 9.0F);
 			}
 		}
 		playSound(SoundEvents.FIRECHARGE_USE, this.getRandom().nextFloat() * 0.5F, this.getRandom().nextFloat() * 0.5F);
@@ -84,7 +84,7 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.10F).add(Attributes.ARMOR, 15.0F).add(Attributes.ARMOR_TOUGHNESS, 4.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.10F).add(Attributes.ARMOR, 16.0F).add(Attributes.ARMOR_TOUGHNESS, 5.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
 	}
 
 	public ItemStack getPickResult() {

@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -292,9 +293,18 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		if (this.isBaby()) {
 			return super.mobInteract(p_30713_, p_30714_);
 		} else {
+			if (this.getHealth() < this.getMaxHealth() && this.healItem(itemstack)) {
+				this.heal(20);
+				return InteractionResult.sidedSuccess(this.level.isClientSide);
+			}
+
 			this.doPlayerRide(p_30713_);
 			return InteractionResult.sidedSuccess(this.level.isClientSide);
 		}
+	}
+
+	public boolean healItem(ItemStack itemstack) {
+		return itemstack.is(Items.IRON_INGOT);
 	}
 
 
