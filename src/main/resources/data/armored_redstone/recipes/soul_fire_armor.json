@@ -11,7 +11,7 @@
       "item": "minecraft:gilded_blackstone"
     },
     "N": {
-      "item": "armored_redstone:gold_conveyor"
+      "item": "armored_redstone:fire_armor"
     },
     "I": {
       "item": "minecraft:nether_bricks"
@@ -19,7 +19,7 @@
   },
   "pattern": [
     "SIS",
-    " N",
+    " N ",
     "CBC"
   ],
   "result": {
