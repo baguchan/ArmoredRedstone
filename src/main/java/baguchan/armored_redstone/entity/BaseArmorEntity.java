@@ -110,7 +110,6 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 
 		if (this.isSprinting()) {
 			this.dash();
-
 		}
 		if (this.canStepUp()) {
 			if (this.isSprinting()) {
@@ -133,15 +132,22 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		return true;
 	}
 
+	protected boolean canDush() {
+		return true;
+	}
+
 
 	@OnlyIn(Dist.CLIENT)
 	protected void updateClientControls() {
 		Minecraft mc = Minecraft.getInstance();
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
-			if (!this.isSprinting() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving() && this.isOnGround()) {
+			boolean flag6 = this.horizontalCollision && !this.minorHorizontalCollision;
+
+
+			if (!this.isSprinting() && this.canDush() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving() && this.isOnGround()) {
 				dushStart();
-			} else if (this.isSprinting() && (!mc.options.keyUp.isDown() || !this.isMoving())) {
+			} else if (this.isSprinting() && (!flag6 || !this.isMoving())) {
 				dushFinish();
 			}
 		} else {

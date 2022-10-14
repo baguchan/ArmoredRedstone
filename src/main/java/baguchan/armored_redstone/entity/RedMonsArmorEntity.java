@@ -20,12 +20,13 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.Tags;
 
-public class PistonArmorEntity extends BaseArmorEntity {
-	private static final EntityDataAccessor<Integer> DATA_ATTACK = SynchedEntityData.defineId(PistonArmorEntity.class, EntityDataSerializers.INT);
+public class RedMonsArmorEntity extends BaseArmorEntity {
+	private static final EntityDataAccessor<Integer> DATA_ATTACK = SynchedEntityData.defineId(RedMonsArmorEntity.class, EntityDataSerializers.INT);
 
 
-	public PistonArmorEntity(EntityType<? extends PistonArmorEntity> p_20966_, Level p_20967_) {
+	public RedMonsArmorEntity(EntityType<? extends RedMonsArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
 	}
 
@@ -35,18 +36,16 @@ public class PistonArmorEntity extends BaseArmorEntity {
 	}
 
 	@Override
+	protected boolean canDush() {
+		return true;
+	}
+
+	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_ATTACK.equals(p_21104_)) {
-			if (this.getAttackTick() == 24) {
+			if (this.getAttackTick() == 30) {
 				this.attackAnimationState.start(this.tickCount);
-				this.attackFinishedAnimationState.stop();
-			}
-
-			if (this.getAttackTick() == 1) {
-				this.attackFinishedAnimationState.start(this.tickCount);
-				this.attackAnimationState.stop();
-				this.playSound(SoundEvents.PISTON_CONTRACT, 1.1F, 1.15F);
 			}
 		}
 	}
@@ -54,9 +53,13 @@ public class PistonArmorEntity extends BaseArmorEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if(this.getAttackTick() > 0) {
+		if (this.getAttackTick() > 0) {
 			this.setAttackTick(this.getAttackTick() - 1);
 		}
+	}
+
+	public boolean healItem(ItemStack itemstack) {
+		return itemstack.is(Tags.Items.COBBLESTONE);
 	}
 
 	@Override
@@ -69,8 +72,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 				}
 			}
-			this.setAttackTick(24);
-			this.playSound(SoundEvents.PISTON_EXTEND, 1.0F, 1.15F);
+			this.setAttackTick(30);
 		}
 	}
 
@@ -112,7 +114,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 300.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.24D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 15.0D).add(Attributes.ATTACK_KNOCKBACK, 1.75D);
 	}
 
 	public ItemStack getPickResult() {

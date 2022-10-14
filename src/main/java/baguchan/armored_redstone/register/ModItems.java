@@ -18,5 +18,6 @@ public class ModItems {
 	public static final RegistryObject<Item> PISTON_ARMOR = ITEM_REGISTRY.register("piston_armor", () -> new ArmorRedstoneItem(ModEntities.PISTON_ARMOR.get(), (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_REDSTONE)));
 	public static final RegistryObject<Item> FIRE_ARMOR = ITEM_REGISTRY.register("fire_armor", () -> new ArmorRedstoneItem(ModEntities.FIRE_ARMOR.get(), (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_REDSTONE)));
 	public static final RegistryObject<Item> SOUL_FIRE_ARMOR = ITEM_REGISTRY.register("soul_fire_armor", () -> new ArmorRedstoneItem(ModEntities.SOUL_FIRE_ARMOR.get(), (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_REDSTONE)));
+	public static final RegistryObject<Item> REDMONS_ARMOR = ITEM_REGISTRY.register("redmons_armor", () -> new ArmorRedstoneItem(ModEntities.RED_MONS_ARMOR.get(), (new Item.Properties()).stacksTo(1).tab(CreativeModeTab.TAB_REDSTONE)));
 
 }

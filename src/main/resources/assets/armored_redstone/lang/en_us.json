@@ -6,9 +6,11 @@
   "entity.armored_redstone.fire_armor": "Fire Armor",
   "entity.armored_redstone.soul_fire_armor": "Soul Fire Armor",
   "entity.armored_redstone.piston_armor": "Piston Armor",
+  "entity.armored_redstone.redmons_armor": "RedMons Armor",
   "item.armored_redstone.fire_armor": "Fire Armor",
   "item.armored_redstone.soul_fire_armor": "Soul Fire Armor",
   "item.armored_redstone.piston_armor": "Piston Armor",
+  "item.armored_redstone.redmons_armor": "RedMons Armor",
   "item.armored_redstone.conveyor": "Conveyor",
   "item.armored_redstone.gold_conveyor": "Gold Conveyor",
   "item.armored_redstone.netherite_conveyor": "Netherite Conveyor"

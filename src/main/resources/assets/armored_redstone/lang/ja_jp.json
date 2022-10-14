@@ -6,9 +6,11 @@
   "entity.armored_redstone.fire_armor": "ファイアアーマー",
   "entity.armored_redstone.soul_fire_armor": "ソウルファイアアーマー",
   "entity.armored_redstone.piston_armor": "ピストンアーマー",
+  "entity.armored_redstone.redmons_armor": "モンストロシティアーマー",
   "item.armored_redstone.fire_armor": "ファイアアーマー",
   "item.armored_redstone.soul_fire_armor": "ソウルファイアアーマー",
   "item.armored_redstone.piston_armor": "ピストンアーマー",
+  "item.armored_redstone.redmons_armor": "モンストロシティアーマー",
   "item.armored_redstone.conveyor": "コンベアー",
   "item.armored_redstone.gold_conveyor": "金のコンベアー",
   "item.armored_redstone.netherite_conveyor": "ネザライトのコンベアー"
