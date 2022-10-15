@@ -64,7 +64,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 		Vec3 vec3d = this.getViewVector(1.0F);
 		if (this.getAttackTick() == 0) {
 			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getAttackBoundingBox())) {
-				if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
+				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
 					this.doHurtTarget(entity);
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 				}

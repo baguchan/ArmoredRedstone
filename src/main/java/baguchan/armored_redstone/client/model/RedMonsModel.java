@@ -3,7 +3,7 @@ package baguchan.armored_redstone.client.model;// Made with Blockbench 4.4.2
 // Paste this class into your mod and generate all required imports
 
 
-import baguchan.armored_redstone.client.animation.FireArmorAnimation;
+import baguchan.armored_redstone.client.animation.RedMonsArmorAnimation;
 import baguchan.armored_redstone.entity.RedMonsArmorEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
@@ -96,8 +96,7 @@ public class RedMonsModel<T extends RedMonsArmorEntity> extends HierarchicalMode
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		this.animate(entity.attackAnimationState, FireArmorAnimation.ATTACK, ageInTicks);
-		this.animate(entity.attackFinishedAnimationState, FireArmorAnimation.ATTACKFINISH, ageInTicks);
+		this.animate(entity.attackAnimationState, RedMonsArmorAnimation.ATTACK, ageInTicks);
 		if (!entity.isSprinting() && entity.isOnGround()) {
 			this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.2F * limbSwingAmount;
 			this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.2F * limbSwingAmount;

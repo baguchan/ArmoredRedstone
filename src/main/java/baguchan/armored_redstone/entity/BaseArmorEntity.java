@@ -13,12 +13,14 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -38,9 +40,9 @@ import net.minecraftforge.fluids.FluidType;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumping {
+public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRideableJumping {
 	private static final UUID SPEED_MODIFIER_EXTRA_SPRINTING_UUID = UUID.fromString("d4c7a47d-709e-9722-a10c-91cc76449c88");
-	private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 0.9F, AttributeModifier.Operation.MULTIPLY_TOTAL);
+	private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 1.5F, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
 	protected boolean isJumping;
 	protected float playerJumpPendingScale;
@@ -121,7 +123,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	}
 
 	private boolean isMoving() {
-		return canDashWithWall() || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D;
+		return canDashWithWall() || this.getDeltaMovement().horizontalDistanceSqr() > 0D;
 	}
 
 	protected boolean canDashWithWall() {
@@ -142,16 +144,16 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		Minecraft mc = Minecraft.getInstance();
 
 		if (mc.player != null && this.hasPassenger(mc.player)) {
-			boolean flag6 = this.horizontalCollision && !this.minorHorizontalCollision;
+			boolean flag6 = this.horizontalCollision;
 
 
 			if (!this.isSprinting() && this.canDush() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving() && this.isOnGround()) {
 				dushStart();
-			} else if (this.isSprinting() && (!flag6 || !this.isMoving())) {
+			} else if (this.isSprinting() && (!this.isMoving()) && !mc.options.keySprint.isDown()) {
 				dushFinish();
 			}
 		} else {
-			if (this.isSprinting()) {
+			if (this.isSprinting() && this.getControllingPassenger() == null) {
 				dushFinish();
 			}
 		}
@@ -205,7 +207,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 
 	private void dash() {
 		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.75D, 0.0D, 0.75D))) {
-			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
+			if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
 				if (entity.hurt(DamageSource.mobAttack(this), 7.0F)) {
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 					if (entity instanceof LivingEntity) {
@@ -217,8 +219,8 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 						}
 
 						((LivingEntity) entity).knockback(1.0, d1, d0);
-						if (this.getControllingPassenger() instanceof Player) {
-							((LivingEntity) entity).setLastHurtByPlayer((Player) this.getControllingPassenger());
+						if (this.getFirstPassenger() instanceof Player) {
+							((LivingEntity) entity).setLastHurtByPlayer((Player) this.getFirstPassenger());
 						}
 					}
 				}
@@ -288,7 +290,7 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	@Nullable
 	public LivingEntity getControllingPassenger() {
 		Entity entity = this.getFirstPassenger();
-		if (entity instanceof LivingEntity) {
+		if (entity instanceof Player) {
 			return (LivingEntity) entity;
 		}
 		return null;
@@ -391,6 +393,10 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 		return false;
 	}
 
+	public boolean canBeAffected(MobEffectInstance p_34192_) {
+		return p_34192_.getEffect() == MobEffects.WITHER || p_34192_.getEffect() == MobEffects.POISON ? false : super.canBeAffected(p_34192_);
+	}
+
 	public float hurtRider(DamageSource damageSource, float damage) {
 
 		if (damageSource.isExplosion()) {
@@ -403,8 +409,8 @@ public abstract class BaseArmorEntity extends Mob implements PlayerRideableJumpi
 	@Override
 	public boolean doHurtTarget(Entity p_21372_) {
 		if (p_21372_ instanceof LivingEntity) {
-			if (this.getControllingPassenger() instanceof Player) {
-				((LivingEntity) p_21372_).setLastHurtByPlayer((Player) this.getControllingPassenger());
+			if (this.getFirstPassenger() instanceof Player) {
+				((LivingEntity) p_21372_).setLastHurtByPlayer((Player) this.getFirstPassenger());
 			}
 		}
 

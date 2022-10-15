@@ -9,11 +9,16 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -30,6 +35,43 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		super(p_20966_, p_20967_);
 	}
 
+	protected void updateControlFlags() {
+		boolean flag = !(this.getControllingPassenger() instanceof Mob) || this.getControllingPassenger().getType().is(EntityTypeTags.RAIDERS);
+		boolean flag1 = !(this.getVehicle() instanceof Boat);
+		this.goalSelector.setControlFlag(Goal.Flag.MOVE, flag);
+		this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
+		this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
+		this.goalSelector.setControlFlag(Goal.Flag.TARGET, flag);
+	}
+
+	@Override
+	protected void registerGoals() {
+		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0F, true) {
+			@Override
+			public boolean canUse() {
+				return getFirstPassenger() != null && super.canUse();
+			}
+
+			@Override
+			public boolean canContinueToUse() {
+				return getFirstPassenger() != null && super.canContinueToUse();
+			}
+
+			@Override
+			protected void checkAndPerformAttack(LivingEntity p_25557_, double p_25558_) {
+				double d0 = this.getAttackReachSqr(p_25557_);
+				if (p_25558_ <= d0) {
+					attack();
+				}
+
+			}
+
+			protected double getAttackReachSqr(LivingEntity p_25556_) {
+				return (double) (this.mob.getBbWidth() * 2.5F * this.mob.getBbWidth() * 2.5F + p_25556_.getBbWidth());
+			}
+		});
+	}
+
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.entityData.define(DATA_ATTACK, 0);
@@ -37,15 +79,19 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 
 	@Override
 	protected boolean canDush() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_ATTACK.equals(p_21104_)) {
-			if (this.getAttackTick() == 30) {
+			if (this.getAttackTick() == 31) {
 				this.attackAnimationState.start(this.tickCount);
+			}
+
+			if (this.getAttackTick() == 0) {
+				this.attackAnimationState.stop();
 			}
 		}
 	}
@@ -55,6 +101,14 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		super.tick();
 		if (this.getAttackTick() > 0) {
 			this.setAttackTick(this.getAttackTick() - 1);
+		}
+
+		if (this.getFirstPassenger() != null && this.getFirstPassenger() instanceof Mob) {
+			if (((Mob) this.getFirstPassenger()).getTarget() != null) {
+				this.setTarget(((Mob) this.getFirstPassenger()).getTarget());
+			}
+		} else if (this.getFirstPassenger() == null && this.getTarget() != null) {
+			this.setTarget(null);
 		}
 	}
 
@@ -67,12 +121,12 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		Vec3 vec3d = this.getViewVector(1.0F);
 		if (this.getAttackTick() == 0) {
 			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getAttackBoundingBox())) {
-				if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
+				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
 					this.doHurtTarget(entity);
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 				}
 			}
-			this.setAttackTick(30);
+			this.setAttackTick(32);
 		}
 	}
 
@@ -114,10 +168,10 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 300.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.24D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 15.0D).add(Attributes.ATTACK_KNOCKBACK, 1.75D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.24D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 2.25D);
 	}
 
 	public ItemStack getPickResult() {
-		return new ItemStack(ModItems.PISTON_ARMOR.get());
+		return new ItemStack(ModItems.REDMONS_ARMOR.get());
 	}
 }

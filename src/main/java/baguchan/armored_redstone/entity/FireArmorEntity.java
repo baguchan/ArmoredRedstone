@@ -85,14 +85,14 @@ public class FireArmorEntity extends BaseArmorEntity {
 
 	public void fireAttack() {
 		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getFireBoundingBox())) {
-			if (entity != this && (this.getControllingPassenger() == null || this.getControllingPassenger() != null && entity != this.getControllingPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
+			if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
 				if (entity instanceof LivingEntity) {
-					if (this.getControllingPassenger() instanceof Player) {
-						((LivingEntity) entity).setLastHurtByPlayer((Player) this.getControllingPassenger());
+					if (this.getFirstPassenger() instanceof Player) {
+						((LivingEntity) entity).setLastHurtByPlayer((Player) this.getFirstPassenger());
 					}
 				}
 				entity.setSecondsOnFire(8);
-				entity.hurt(ModDamageSource.fire(this, this.getControllingPassenger()), 8.0F);
+				entity.hurt(ModDamageSource.fire(this, this.getFirstPassenger()), 8.0F);
 
 			}
 		}
