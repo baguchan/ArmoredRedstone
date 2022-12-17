@@ -354,7 +354,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 	}
 
 	@Override
-	public boolean canJump() {
+	public boolean canJump(Player p_260002_) {
 		return true;
 	}
 

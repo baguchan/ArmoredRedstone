@@ -19,13 +19,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.BaseSpawner;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -37,11 +33,12 @@ import javax.annotation.Nullable;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ArmorRedstoneItem extends Item {
-	private final EntityType<?> defaultType;
+	private final Supplier<? extends EntityType<? extends Mob>> defaultType;
 
-	public ArmorRedstoneItem(EntityType<? extends Mob> p_43207_, Item.Properties p_43210_) {
+	public ArmorRedstoneItem(Supplier<? extends EntityType<? extends Mob>> p_43207_, Item.Properties p_43210_) {
 		super(p_43210_);
 		this.defaultType = p_43207_;
 	}
@@ -55,19 +52,6 @@ public class ArmorRedstoneItem extends Item {
 			BlockPos blockpos = p_43223_.getClickedPos();
 			Direction direction = p_43223_.getClickedFace();
 			BlockState blockstate = level.getBlockState(blockpos);
-			if (blockstate.is(Blocks.SPAWNER)) {
-				BlockEntity blockentity = level.getBlockEntity(blockpos);
-				if (blockentity instanceof SpawnerBlockEntity) {
-					BaseSpawner basespawner = ((SpawnerBlockEntity) blockentity).getSpawner();
-					EntityType<?> entitytype1 = this.getType(itemstack.getTag());
-					basespawner.setEntityId(entitytype1);
-					blockentity.setChanged();
-					level.sendBlockUpdated(blockpos, blockstate, blockstate, 3);
-					level.gameEvent(p_43223_.getPlayer(), GameEvent.BLOCK_CHANGE, blockpos);
-					itemstack.shrink(1);
-					return InteractionResult.CONSUME;
-				}
-			}
 
 			BlockPos blockpos1;
 			if (blockstate.getCollisionShape(level, blockpos).isEmpty()) {
@@ -126,11 +110,11 @@ public class ArmorRedstoneItem extends Item {
 		if (p_43229_ != null && p_43229_.contains("EntityTag", 10)) {
 			CompoundTag compoundtag = p_43229_.getCompound("EntityTag");
 			if (compoundtag.contains("id", 8)) {
-				return EntityType.byString(compoundtag.getString("id")).orElse(this.defaultType);
+				return EntityType.byString(compoundtag.getString("id")).orElse(this.defaultType.get());
 			}
 		}
 
-		return this.defaultType;
+		return this.defaultType.get();
 	}
 
 	public Optional<Mob> spawnOffspringFromSpawnEgg(Player p_43216_, Mob p_43217_, EntityType<? extends Mob> p_43218_, ServerLevel p_43219_, Vec3 p_43220_, ItemStack p_43221_) {
