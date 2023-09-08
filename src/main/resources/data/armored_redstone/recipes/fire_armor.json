@@ -11,7 +11,7 @@
       "item": "armored_redstone:gold_conveyor"
     },
     "G": {
-      "tag": "forge:ingots/gold"
+      "item": "minecraft:gold_block"
     },
     "B": {
       "item": "minecraft:nether_bricks"

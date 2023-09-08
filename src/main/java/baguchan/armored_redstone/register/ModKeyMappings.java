@@ -11,9 +11,11 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ArmoredRedstone.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModKeyMappings {
 	public static final KeyMapping keyFire = new KeyMapping("key.armored_redstone.fire", InputConstants.KEY_G, "key.categories.movement");
+	public static final KeyMapping keyFire2 = new KeyMapping("key.armored_redstone.fire2", InputConstants.KEY_H, "key.categories.movement");
 
 	@SubscribeEvent
 	public static void init(RegisterKeyMappingsEvent event) {
 		event.register(keyFire);
+		event.register(keyFire2);
 	}
 }

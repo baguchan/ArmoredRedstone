@@ -21,7 +21,6 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
@@ -78,11 +77,6 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 	}
 
 	@Override
-	protected boolean canDush() {
-		return false;
-	}
-
-	@Override
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_ATTACK.equals(p_21104_)) {
@@ -118,9 +112,8 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 
 	@Override
 	public void attack() {
-		Vec3 vec3d = this.getViewVector(1.0F);
 		if (this.getAttackTick() == 0) {
-			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getAttackBoundingBox())) {
+			for (Entity entity : this.pickEntitys(4, this.getEyePosition())) {
 				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
 					this.doHurtTarget(entity);
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
@@ -168,10 +161,19 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.24D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 2.25D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.24D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 3D);
 	}
 
-	public ItemStack getPickResult() {
+	@Override
+	public boolean canSprint() {
+		return true;
+	}
+
+	public boolean hasSprintUnique() {
+		return false;
+	}
+
+	public ItemStack getPickItem() {
 		return new ItemStack(ModItems.REDMONS_ARMOR.get());
 	}
 }

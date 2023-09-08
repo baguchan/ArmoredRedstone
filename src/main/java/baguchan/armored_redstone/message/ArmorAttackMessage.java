@@ -3,7 +3,6 @@ package baguchan.armored_redstone.message;
 import baguchan.armored_redstone.entity.BaseArmorEntity;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -35,7 +34,7 @@ public class ArmorAttackMessage {
 
 		if (context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
 			context.enqueueWork(() -> {
-				Entity entity = context.getSender().level.getEntity(message.entityId);
+				Entity entity = context.getSender().level().getEntity(message.entityId);
 				if (entity != null && entity instanceof BaseArmorEntity) {
 
 					((BaseArmorEntity) entity).attack();

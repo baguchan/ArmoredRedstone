@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ForgeMod;
@@ -61,9 +60,8 @@ public class PistonArmorEntity extends BaseArmorEntity {
 
 	@Override
 	public void attack() {
-		Vec3 vec3d = this.getViewVector(1.0F);
 		if (this.getAttackTick() == 0) {
-			for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getAttackBoundingBox())) {
+			for (Entity entity : this.pickEntitys(4, this.getEyePosition())) {
 				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
 					this.doHurtTarget(entity);
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
@@ -115,7 +113,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.1D).add(Attributes.KNOCKBACK_RESISTANCE, 0.75D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
 	}
 
-	public ItemStack getPickResult() {
+	public ItemStack getPickItem() {
 		return new ItemStack(ModItems.PISTON_ARMOR.get());
 	}
 }

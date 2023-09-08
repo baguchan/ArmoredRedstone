@@ -34,7 +34,7 @@ public class FireArmorStopAttackMessage {
 
 		if (context.getDirection().getReceptionSide() == LogicalSide.SERVER) {
 			context.enqueueWork(() -> {
-				Entity entity = context.getSender().level.getEntity(message.entityId);
+				Entity entity = context.getSender().level().getEntity(message.entityId);
 				if (entity instanceof FireArmorEntity) {
 					((FireArmorEntity) entity).setFireAttack(false);
 				}

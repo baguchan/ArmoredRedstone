@@ -1,16 +1,12 @@
 package baguchan.armored_redstone.register;
 
-import baguchan.armored_redstone.entity.BaseArmorEntity;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.IndirectEntityDamageSource;
-import net.minecraft.world.entity.Entity;
+import baguchan.armored_redstone.ArmoredRedstone;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageType;
 
-public class ModDamageSource {
-	public static DamageSource soul(BaseArmorEntity p_19350_, Entity controllingPassenger) {
-		return controllingPassenger != null ? (new IndirectEntityDamageSource("armored_redstone.onSoul", p_19350_, controllingPassenger)).bypassArmor() : (new IndirectEntityDamageSource("armored_redstone.onSoul.player", p_19350_, controllingPassenger)).bypassArmor();
-	}
-
-	public static DamageSource fire(BaseArmorEntity p_19350_, Entity controllingPassenger) {
-		return controllingPassenger != null ? (new IndirectEntityDamageSource("armored_redstone.onFire", p_19350_, controllingPassenger)).setIsFire() : (new IndirectEntityDamageSource("armored_redstone.onFire.player", p_19350_, controllingPassenger)).setIsFire();
-	}
+public interface ModDamageSource {
+    ResourceKey<DamageType> FIRE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArmoredRedstone.MODID, "fire"));
+    ResourceKey<DamageType> SOUL_FIRE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(ArmoredRedstone.MODID, "soul_fire"));
 }

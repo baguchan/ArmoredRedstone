@@ -1,8 +1,6 @@
 {
-  "death.attack.armored_redstone.onFire": "%1$s was burn out by %2$s %3$s",
-  "death.attack.armored_redstone.onFire.player": "%1$s was burn out by %3$s's %2$s",
-  "death.attack.armored_redstone.onSoul": "%1$s was soulless by %2$s %3$s",
-  "death.attack.armored_redstone.onSoul.player": "%1$s was soulless by %3$s's %2$s",
+  "death.attack.armored_redstone.fire": "%1$s was burn out by %2$s",
+  "death.attack.armored_redstone.soul_fire": "%1$s was soulless by %2$s",
   "entity.armored_redstone.fire_armor": "Fire Armor",
   "entity.armored_redstone.soul_fire_armor": "Soul Fire Armor",
   "entity.armored_redstone.piston_armor": "Piston Armor",
@@ -13,5 +11,7 @@
   "item.armored_redstone.redmons_armor": "RedMons Armor",
   "item.armored_redstone.conveyor": "Conveyor",
   "item.armored_redstone.gold_conveyor": "Gold Conveyor",
-  "item.armored_redstone.netherite_conveyor": "Netherite Conveyor"
+  "item.armored_redstone.netherite_conveyor": "Netherite Conveyor",
+  "key.armored_redstone.fire": "General Attack",
+  "key.armored_redstone.fire2": "Second Attack"
 }

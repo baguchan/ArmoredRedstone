@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -28,7 +28,7 @@ public class CommonEvent {
 	}
 
 	@SubscribeEvent
-	public static void onSpawnEntity(LivingSpawnEvent.SpecialSpawn event) {
+	public static void onSpawnEntity(MobSpawnEvent.FinalizeSpawn event) {
 		if (event.getEntity() instanceof Pillager) {
 			LevelAccessor level = event.getLevel();
 

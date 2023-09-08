@@ -8,11 +8,7 @@ import baguchan.armored_redstone.entity.PistonArmorEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 
 public class PistonArmorModel<T extends PistonArmorEntity> extends HierarchicalModel<T> {
@@ -98,7 +94,7 @@ public class PistonArmorModel<T extends PistonArmorEntity> extends HierarchicalM
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 		this.animate(entity.attackAnimationState, PistonArmorAnimation.ATTACK, ageInTicks);
 		this.animate(entity.attackFinishedAnimationState, PistonArmorAnimation.ATTACKFINISH, ageInTicks);
-		if (!entity.isSprinting() && entity.isOnGround()) {
+		if (!entity.isSprinting() && entity.onGround()) {
 			this.right_leg_base.xRot = Mth.cos(limbSwing * 0.6662F) * 1.2F * limbSwingAmount;
 			this.left_leg_base.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.2F * limbSwingAmount;
 		} else {

@@ -1,11 +1,17 @@
 {
-  "type": "minecraft:smithing",
-  "base": {
-    "item": "armored_redstone:gold_conveyor"
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "R": {
+      "item": "minecraft:redstone_block"
+    },
+    "N": {
+      "item": "minecraft:netherite"
+    }
   },
-  "addition": {
-    "item": "minecraft:netherite_ingot"
-  },
+  "pattern": [
+    "R",
+    "N"
+  ],
   "result": {
     "item": "armored_redstone:netherite_conveyor"
   }

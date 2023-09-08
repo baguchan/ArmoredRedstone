@@ -1,27 +1,21 @@
 package baguchan.armored_redstone.entity;
 
-import baguchan.armored_redstone.ArmoredRedstone;
-import baguchan.armored_redstone.message.FinishDushAttackMessage;
-import baguchan.armored_redstone.message.StartDushAttackMessage;
+import baguchan.armored_redstone.register.ModItems;
+import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -38,6 +32,8 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fluids.FluidType;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRideableJumping {
@@ -57,13 +53,15 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 	public void setSprinting(boolean p_21284_) {
 		super.setSprinting(p_21284_);
-		AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-		if (attributeinstance.getModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID) != null) {
-			attributeinstance.removeModifier(SPEED_MODIFIER_EXTRA_SPRINTING);
-		}
+		if (this.hasSprintUnique()) {
+			AttributeInstance attributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+			if (attributeinstance.getModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID) != null) {
+				attributeinstance.removeModifier(SPEED_MODIFIER_EXTRA_SPRINTING);
+			}
 
-		if (p_21284_) {
-			attributeinstance.addTransientModifier(SPEED_MODIFIER_EXTRA_SPRINTING);
+			if (p_21284_) {
+				attributeinstance.addTransientModifier(SPEED_MODIFIER_EXTRA_SPRINTING);
+			}
 		}
 
 	}
@@ -72,10 +70,12 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_SHARED_FLAGS_ID.equals(p_21104_)) {
-			if (this.isSprinting()) {
-				this.playSound(SoundEvents.REDSTONE_TORCH_BURNOUT, 1.5F, 1.2F);
-			} else {
-				this.playSound(SoundEvents.REDSTONE_TORCH_BURNOUT, 1.5F, 1.2F);
+			if (this.hasSprintUnique()) {
+				if (this.isSprinting()) {
+					this.playSound(SoundEvents.REDSTONE_TORCH_BURNOUT, 1.5F, 1.2F);
+				} else {
+					this.playSound(SoundEvents.REDSTONE_TORCH_BURNOUT, 1.5F, 1.2F);
+				}
 			}
 		}
 	}
@@ -106,24 +106,36 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 	@Override
 	public void tick() {
 		super.tick();
-		if (this.level.isClientSide()) {
+		if (this.level().isClientSide()) {
 			this.updateClientControls();
 		}
 
-		if (this.isSprinting()) {
+		if (this.getFirstPassenger() != null && this.hasSprintUnique()) {
+			if (this.getFirstPassenger().isSprinting() && !this.isSprinting() && this.isMoving() && this.onGround()) {
+				this.setSprinting(true);
+			} else if (this.isSprinting() && (!this.isMoving())) {
+				this.setSprinting(false);
+			}
+		} else {
+			if (this.isSprinting() && this.getControllingPassenger() == null) {
+				this.setSprinting(false);
+			}
+		}
+
+		if (this.isSprinting() && this.hasSprintUnique()) {
 			this.dash();
 		}
 		if (this.canStepUp()) {
 			if (this.isSprinting()) {
-				this.maxUpStep = 0.5F;
+				this.setMaxUpStep(0.5F);
 			} else {
-				this.maxUpStep = 1.0F;
+				this.setMaxUpStep(1.0F);
 			}
 		}
 	}
 
 	private boolean isMoving() {
-		return canDashWithWall() || this.getDeltaMovement().horizontalDistanceSqr() > 0D;
+		return (!canDashWithWall() && !this.horizontalCollision || canDashWithWall()) && this.getFirstPassenger() instanceof LivingEntity livingEntity && livingEntity.zza > 0;
 	}
 
 	protected boolean canDashWithWall() {
@@ -134,51 +146,28 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 		return true;
 	}
 
-	protected boolean canDush() {
-		return true;
-	}
-
 
 	@OnlyIn(Dist.CLIENT)
 	protected void updateClientControls() {
 		Minecraft mc = Minecraft.getInstance();
 
-		if (mc.player != null && this.hasPassenger(mc.player)) {
-			boolean flag6 = this.horizontalCollision;
 
-
-			if (!this.isSprinting() && this.canDush() && mc.options.keySprint.isDown() && mc.options.keyUp.isDown() && this.isMoving() && this.isOnGround()) {
-				dushStart();
-			} else if (this.isSprinting() && (!this.isMoving()) && !mc.options.keySprint.isDown()) {
-				dushFinish();
-			}
-		} else {
-			if (this.isSprinting() && this.getControllingPassenger() == null) {
-				dushFinish();
-			}
-		}
 	}
 
 	@Override
 	protected void spawnSprintParticle() {
 		super.spawnSprintParticle();
-		EntityDimensions dimensions = this.getDimensions(this.getPose());
-		Vec3 vec3 = this.getDeltaMovement();
-		this.level.addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX() + (this.random.nextDouble() - 0.5D) * (double) dimensions.width, this.getY() + 0.1D, this.getZ() + (this.random.nextDouble() - 0.5D) * (double) dimensions.width, vec3.x * -0.25D, 0.25D, vec3.z * -0.25D);
-	}
-
-	private void dushFinish() {
-		ArmoredRedstone.CHANNEL.sendToServer(new FinishDushAttackMessage(this));
-	}
-
-	private void dushStart() {
-		ArmoredRedstone.CHANNEL.sendToServer(new StartDushAttackMessage(this));
+		if (this.hasSprintUnique()) {
+			EntityDimensions dimensions = this.getDimensions(this.getPose());
+			Vec3 vec3 = this.getDeltaMovement();
+			this.level().addParticle(ParticleTypes.CAMPFIRE_COSY_SMOKE, this.getX() + (this.random.nextDouble() - 0.5D) * (double) dimensions.width, this.getY() + 0.1D, this.getZ() + (this.random.nextDouble() - 0.5D) * (double) dimensions.width, vec3.x * -0.25D, 0.25D, vec3.z * -0.25D);
+		}
 	}
 
 	@Override
 	protected void playStepSound(BlockPos p_20135_, BlockState p_20136_) {
 		super.playStepSound(p_20135_, p_20136_);
-		if (!this.isSprinting()) {
+		if (!this.isSprinting() || this.isSprinting() && !this.hasSprintUnique()) {
 
 			if (stepSounds() != null) {
 				this.playSound(stepSounds(), 1.0F, 1.0F);
@@ -200,15 +189,37 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 	public abstract void secondAttack();
 
-	public AABB getAttackBoundingBox() {
-		Vec3 vec3d = this.getViewVector(1.0F);
-		return this.getBoundingBox().contract(0, -(this.getBbHeight() - this.getBbWidth()), 0).inflate(1.0D, 1.0D, 1.0D).move(vec3d.x * 1.65D, vec3d.y * 1.65D, vec3d.z * 1.65D);
+	public List<Entity> pickEntitys(double range, Vec3 offset) {
+		return pickEntitys(range, offset, this.getBbWidth());
+	}
+
+	public List<Entity> pickEntitys(double range, Vec3 offset, float width) {
+		Vec3 vec3 = offset;
+		Vec3 vec31 = this.getLookAngle();
+		List<Entity> entities = Lists.newArrayList();
+		Vec3 vec32 = vec3.add(vec31.x * range, vec31.y * range, vec31.z * range);
+		AABB aabb = this.getBoundingBox().move(vec31.x() * (range), vec31.y() * (range), vec31.z() * (range)).inflate(range);
+
+		for (Entity entity : this.level().getEntitiesOfClass(Entity.class, aabb)) {
+			if (entity.isAttackable() && entity != this && entity != this.getFirstPassenger()) {
+				float borderSize = entity.getPickRadius() + width;
+				AABB collisionBB = entity.getBoundingBox().inflate(borderSize, borderSize, borderSize);
+				Optional<Vec3> interceptPos = collisionBB.clip(vec3, vec32);
+				if (collisionBB.contains(vec3)) {
+					entities.add(entity);
+				} else if (interceptPos.isPresent()) {
+					entities.add(entity);
+				}
+			}
+
+		}
+		return entities;
 	}
 
 	private void dash() {
-		for (Entity entity : this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.75D, 0.0D, 0.75D))) {
+		for (Entity entity : this.level().getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(0.75D, 0.0D, 0.75D))) {
 			if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable() && this.distanceTo(entity) < 26.0D)) {
-				if (entity.hurt(DamageSource.mobAttack(this), 7.0F)) {
+				if (entity.hurt(this.damageSources().mobAttack(this.getFirstPassenger() instanceof LivingEntity ? (LivingEntity) this.getFirstPassenger() : this), 7.0F)) {
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 					if (entity instanceof LivingEntity) {
 						double d1 = entity.getX() - this.getX();
@@ -232,10 +243,8 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 		if (this.isAlive()) {
 			LivingEntity livingentity = this.getControllingPassenger();
 			if (this.isVehicle() && livingentity != null) {
-				this.setYRot(livingentity.getYRot());
 				this.yRotO = this.getYRot();
-				this.setXRot(livingentity.getXRot() * 0.5F);
-				this.setRot(this.getYRot(), this.getXRot());
+				this.setRot(livingentity.getYRot(), livingentity.getXRot() * 0.5F);
 				this.yBodyRot = this.getYRot();
 				this.yHeadRot = this.yBodyRot;
 				float f = livingentity.xxa * 0.5F;
@@ -244,7 +253,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 					f1 *= 0.35F;
 				}
 
-				if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround) {
+				if (this.playerJumpPendingScale > 0.0F && !this.isJumping() && this.onGround()) {
 					double d0 = 1.1D * (double) this.playerJumpPendingScale * (double) this.getBlockJumpFactor();
 					double d1 = d0 + this.getJumpBoostPower();
 					Vec3 vec3 = this.getDeltaMovement();
@@ -261,7 +270,6 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 					this.playerJumpPendingScale = 0.0F;
 				}
 
-				this.flyingSpeed = this.getSpeed() * 0.1F;
 				if (this.isControlledByLocalInstance()) {
 					this.setSpeed((float) this.getAttributeValue(Attributes.MOVEMENT_SPEED));
 					super.travel(new Vec3((double) f, p_30633_.y, (double) f1));
@@ -269,7 +277,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 					this.setDeltaMovement(Vec3.ZERO);
 				}
 
-				if (this.onGround || this.fireImmune() && this.canJumpOnLava() && this.isInFluidType(ForgeMod.LAVA_TYPE.get())) {
+				if (this.onGround() || this.fireImmune() && this.canJumpOnLava() && this.isInFluidType(ForgeMod.LAVA_TYPE.get())) {
 					this.playerJumpPendingScale = 0.0F;
 					this.setIsJumping(false);
 				}
@@ -277,14 +285,21 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 				//this.calculateEntityAnimation(this, false);
 				this.tryCheckInsideBlocks();
 			} else {
-				this.flyingSpeed = 0.02F;
 				super.travel(p_30633_);
 			}
 		}
 	}
 
+	protected float getFlyingSpeed() {
+		return this.getControllingPassenger() != null ? this.getSpeed() * 0.1F : 0.02F;
+	}
+
 	public boolean canJumpOnLava() {
 		return false;
+	}
+
+	public boolean hasSprintUnique() {
+		return true;
 	}
 
 	@Nullable
@@ -298,16 +313,16 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 	public InteractionResult mobInteract(Player p_30713_, InteractionHand p_30714_) {
 		ItemStack itemstack = p_30713_.getItemInHand(p_30714_);
-		if (this.isBaby()) {
+		if (itemstack.is(ModItems.WRENCH.get())) {
 			return super.mobInteract(p_30713_, p_30714_);
 		} else {
 			if (this.getHealth() < this.getMaxHealth() && this.healItem(itemstack)) {
 				this.heal(20);
-				return InteractionResult.sidedSuccess(this.level.isClientSide);
+				return InteractionResult.sidedSuccess(this.level().isClientSide);
 			}
 
 			this.doPlayerRide(p_30713_);
-			return InteractionResult.sidedSuccess(this.level.isClientSide);
+			return InteractionResult.sidedSuccess(this.level().isClientSide);
 		}
 	}
 
@@ -317,7 +332,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 
 	protected void doPlayerRide(Player p_30634_) {
-		if (!this.level.isClientSide) {
+		if (!this.level().isClientSide) {
 			p_30634_.setYRot(this.getYRot());
 			p_30634_.setXRot(this.getXRot());
 			p_30634_.startRiding(this);
@@ -354,7 +369,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 	}
 
 	@Override
-	public boolean canJump(Player p_260002_) {
+	public boolean canJump() {
 		return true;
 	}
 
@@ -399,7 +414,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 	public float hurtRider(DamageSource damageSource, float damage) {
 
-		if (damageSource.isExplosion()) {
+		if (damageSource.is(DamageTypeTags.IS_EXPLOSION)) {
 			return damage * 0.95F;
 		}
 
@@ -408,13 +423,21 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 	@Override
 	public boolean doHurtTarget(Entity p_21372_) {
-		if (p_21372_ instanceof LivingEntity) {
-			if (this.getFirstPassenger() instanceof Player) {
-				((LivingEntity) p_21372_).setLastHurtByPlayer((Player) this.getFirstPassenger());
+		boolean flag = super.doHurtTarget(p_21372_);
+		if (flag) {
+			if (p_21372_ instanceof LivingEntity) {
+				if (this.getFirstPassenger() instanceof Player) {
+					((LivingEntity) p_21372_).setLastHurtByPlayer((Player) this.getFirstPassenger());
+				}
+				if (this.getFirstPassenger() instanceof LivingEntity firstPassenger) {
+					if (p_21372_ instanceof Mob mob) {
+						mob.setTarget(firstPassenger);
+					}
+				}
 			}
 		}
 
-		return super.doHurtTarget(p_21372_);
+		return flag;
 	}
 
 	@Override
@@ -430,5 +453,13 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 	@Override
 	public boolean removeWhenFarAway(double p_21542_) {
 		return false;
+	}
+
+	public abstract ItemStack getPickItem();
+
+
+	@Override
+	public boolean canSprint() {
+		return true;
 	}
 }

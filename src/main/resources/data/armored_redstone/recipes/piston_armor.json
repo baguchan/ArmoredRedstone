@@ -7,9 +7,6 @@
     "R": {
       "item": "minecraft:redstone_block"
     },
-    "I": {
-      "tag": "forge:ingots/iron"
-    },
     "B": {
       "item": "minecraft:iron_block"
     },
@@ -18,9 +15,9 @@
     }
   },
   "pattern": [
-    "IRI",
+    "BRB",
     "PBP",
-    "CBC"
+    "C C"
   ],
   "result": {
     "item": "armored_redstone:piston_armor"
