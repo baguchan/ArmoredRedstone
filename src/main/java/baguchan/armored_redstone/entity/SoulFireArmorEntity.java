@@ -40,7 +40,7 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 			protected void checkAndPerformAttack(LivingEntity p_25557_, double p_25558_) {
 				double d0 = this.getAttackReachSqr(p_25557_);
 				if (p_25558_ <= d0) {
-					attack();
+					fireAttack();
 				}
 
 			}

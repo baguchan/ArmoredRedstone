@@ -9,16 +9,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,15 +29,6 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 
 	public RedMonsArmorEntity(EntityType<? extends RedMonsArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
-	}
-
-	protected void updateControlFlags() {
-		boolean flag = !(this.getControllingPassenger() instanceof Mob) || this.getControllingPassenger().getType().is(EntityTypeTags.RAIDERS);
-		boolean flag1 = !(this.getVehicle() instanceof Boat);
-		this.goalSelector.setControlFlag(Goal.Flag.MOVE, flag);
-		this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
-		this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
-		this.goalSelector.setControlFlag(Goal.Flag.TARGET, flag);
 	}
 
 	@Override

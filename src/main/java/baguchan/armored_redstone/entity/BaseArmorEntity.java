@@ -19,7 +19,9 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -49,6 +51,15 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
 	protected BaseArmorEntity(EntityType<? extends BaseArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
+	}
+
+	protected void updateControlFlags() {
+		boolean flag = (this.getControllingPassenger() instanceof Mob);
+		boolean flag1 = !(this.getVehicle() instanceof Boat);
+		this.goalSelector.setControlFlag(Goal.Flag.MOVE, flag);
+		this.goalSelector.setControlFlag(Goal.Flag.JUMP, flag && flag1);
+		this.goalSelector.setControlFlag(Goal.Flag.LOOK, flag);
+		this.goalSelector.setControlFlag(Goal.Flag.TARGET, flag);
 	}
 
 	public void setSprinting(boolean p_21284_) {
@@ -305,7 +316,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 	@Nullable
 	public LivingEntity getControllingPassenger() {
 		Entity entity = this.getFirstPassenger();
-		if (entity instanceof Player) {
+		if (entity instanceof LivingEntity) {
 			return (LivingEntity) entity;
 		}
 		return null;
