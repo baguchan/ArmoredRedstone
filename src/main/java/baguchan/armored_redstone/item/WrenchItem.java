@@ -18,7 +18,7 @@ public class WrenchItem extends Item {
     public InteractionResult interactLivingEntity(ItemStack p_41398_, Player p_41399_, LivingEntity p_41400_, InteractionHand p_41401_) {
         if (!p_41399_.level().isClientSide()) {
             if (p_41400_ instanceof BaseArmorEntity baseArmorEntity) {
-                BehaviorUtils.throwItem(p_41400_, baseArmorEntity.getPickItem(), p_41400_.position());
+                BehaviorUtils.throwItem(p_41400_, baseArmorEntity.getPickStack(), p_41400_.position());
                 p_41400_.discard();
                 return InteractionResult.SUCCESS;
             }

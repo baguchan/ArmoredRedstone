@@ -54,7 +54,7 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 					}
 					entity.setSecondsOnFire(8);
 					entity.hurt(this.damageSources().source(ModDamageSource.FIRE, this.getFirstPassenger() instanceof LivingEntity ? (LivingEntity) this.getFirstPassenger() : this), 4.0F);
-					entity.hurt(this.damageSources().source(ModDamageSource.SOUL_FIRE, this.getFirstPassenger() instanceof LivingEntity ? (LivingEntity) this.getFirstPassenger() : this), 7.0F);
+					entity.hurt(this.damageSources().source(ModDamageSource.SOUL_FIRE, this.getFirstPassenger() instanceof LivingEntity ? (LivingEntity) this.getFirstPassenger() : this), 5.0F);
 				}
 			}
 		}
@@ -105,7 +105,7 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.10F).add(Attributes.ARMOR, 16.0F).add(Attributes.ARMOR_TOUGHNESS, 5.0F).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 10.0D).add(Attributes.ATTACK_KNOCKBACK, 2.0D);
 	}
 
-	public ItemStack getPickItem() {
+	protected ItemStack getPickItem() {
 		return new ItemStack(ModItems.SOUL_FIRE_ARMOR.get());
 	}
 }

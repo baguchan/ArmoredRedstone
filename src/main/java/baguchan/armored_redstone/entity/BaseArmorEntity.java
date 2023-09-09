@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -347,6 +348,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
         } else {
             if (this.getHealth() < this.getMaxHealth() && this.healItem(itemstack)) {
                 this.heal(20);
+                this.playSound(SoundEvents.IRON_GOLEM_REPAIR);
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }
 
@@ -393,7 +395,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
     @Override
     public boolean dismountsUnderwater() {
-        return true;
+        return false;
     }
 
     protected float getWaterSlowDown() {
@@ -443,11 +445,24 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
         return false;
     }
 
-    public abstract ItemStack getPickItem();
+    protected abstract ItemStack getPickItem();
+
+    public ItemStack getPickStack() {
+        ItemStack stack = getPickItem();
+        CompoundTag tag = new CompoundTag();
+        this.addAdditionalSaveData(tag);
+        if (this.hasCustomName()) {
+            tag.putString("CustomName", this.getCustomName().getString());
+        }
+        stack.getOrCreateTag().put("ArmorData", tag);
+
+        return stack;
+    }
 
     @Override
     public ItemStack getPickedResult(HitResult target) {
-        return getPickItem();
+
+        return getPickStack();
     }
 
     @Override

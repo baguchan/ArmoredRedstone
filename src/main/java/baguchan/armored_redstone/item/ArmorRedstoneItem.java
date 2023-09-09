@@ -1,23 +1,22 @@
 package baguchan.armored_redstone.item;
 
 import baguchan.armored_redstone.client.render.item.ArmorBWLR;
+import baguchan.armored_redstone.entity.BaseArmorEntity;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -30,6 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -61,7 +61,14 @@ public class ArmorRedstoneItem extends Item {
 			}
 
 			EntityType<?> entitytype = this.getType(itemstack.getTag());
-			if (entitytype.spawn((ServerLevel) level, itemstack, p_43223_.getPlayer(), blockpos1, MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP) != null) {
+			Entity entity = entitytype.spawn((ServerLevel) level, itemstack, p_43223_.getPlayer(), blockpos1, MobSpawnType.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
+			if (entity != null) {
+				if (itemstack.getTag() != null) {
+					if (entity instanceof BaseArmorEntity baseArmorEntity) {
+						baseArmorEntity.readAdditionalSaveData(itemstack.getTag().getCompound("ArmorData"));
+						baseArmorEntity.setCustomName(Component.literal(itemstack.getTag().getCompound("ArmorData").getString("CustomName")));
+					}
+				}
 				itemstack.shrink(1);
 				level.gameEvent(p_43223_.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);
 			}
@@ -85,6 +92,12 @@ public class ArmorRedstoneItem extends Item {
 			} else if (p_43225_.mayInteract(p_43226_, blockpos) && p_43226_.mayUseItemAt(blockpos, blockhitresult.getDirection(), itemstack)) {
 				EntityType<?> entitytype = this.getType(itemstack.getTag());
 				Entity entity = entitytype.spawn((ServerLevel) p_43225_, itemstack, p_43226_, blockpos, MobSpawnType.SPAWN_EGG, false, false);
+				if (itemstack.getTag() != null) {
+					if (entity instanceof BaseArmorEntity baseArmorEntity) {
+						baseArmorEntity.readAdditionalSaveData(itemstack.getTag().getCompound("ArmorData"));
+						baseArmorEntity.setCustomName(Component.literal(itemstack.getTag().getCompound("ArmorData").getString("CustomName")));
+					}
+				}
 				if (entity == null) {
 					return InteractionResultHolder.pass(itemstack);
 				} else {
@@ -96,6 +109,7 @@ public class ArmorRedstoneItem extends Item {
 					p_43225_.gameEvent(p_43226_, GameEvent.ENTITY_PLACE, entity.position());
 					return InteractionResultHolder.consume(itemstack);
 				}
+
 			} else {
 				return InteractionResultHolder.fail(itemstack);
 			}
@@ -160,5 +174,15 @@ public class ArmorRedstoneItem extends Item {
 				return new ArmorBWLR();
 			}
 		});
+	}
+
+	@Override
+	public void appendHoverText(ItemStack p_41421_, @Nullable Level p_41422_, List<Component> p_41423_, TooltipFlag p_41424_) {
+		super.appendHoverText(p_41421_, p_41422_, p_41423_, p_41424_);
+		if (p_41421_.getTag() != null) {
+			if (p_41421_.getTag().getCompound("ArmorData").contains("CustomName")) {
+				p_41423_.add(Component.literal("Custom Name:").append(" ").append(p_41421_.getTag().getCompound("ArmorData").getString("CustomName")));
+			}
+		}
 	}
 }

@@ -137,7 +137,7 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		return false;
 	}
 
-	public ItemStack getPickItem() {
+	protected ItemStack getPickItem() {
 		return new ItemStack(ModItems.REDMONS_ARMOR.get());
 	}
 }
