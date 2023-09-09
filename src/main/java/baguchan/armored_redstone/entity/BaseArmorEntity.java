@@ -39,7 +39,7 @@ import java.util.UUID;
 
 public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRideableJumping {
     private static final UUID SPEED_MODIFIER_EXTRA_SPRINTING_UUID = UUID.fromString("d4c7a47d-709e-9722-a10c-91cc76449c88");
-    private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 1.5F, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    private static final AttributeModifier SPEED_MODIFIER_EXTRA_SPRINTING = new AttributeModifier(SPEED_MODIFIER_EXTRA_SPRINTING_UUID, "Extra Sprinting speed boost", (double) 1.25F, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     protected boolean isJumping;
     protected float playerJumpPendingScale;

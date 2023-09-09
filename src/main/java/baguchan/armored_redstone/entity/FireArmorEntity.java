@@ -169,7 +169,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 			} else if (isFireAttack()) {
 				ArmoredRedstone.CHANNEL.sendToServer(new FireArmorStopAttackMessage(this));
 			}
-		} else if (isFireAttack()) {
+		} else if (!this.hasControllingPassenger()) {
 			ArmoredRedstone.CHANNEL.sendToServer(new FireArmorStopAttackMessage(this));
 		}
 	}
