@@ -1,6 +1,7 @@
 package baguchan.armored_redstone.entity;
 
 import baguchan.armored_redstone.ArmoredRedstone;
+import baguchan.armored_redstone.entity.goal.FireMeleeAttackGoal;
 import baguchan.armored_redstone.message.ArmorAttackMessage;
 import baguchan.armored_redstone.message.FireArmorStopAttackMessage;
 import baguchan.armored_redstone.register.ModDamageSource;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -44,30 +44,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 
 	@Override
 	protected void registerGoals() {
-		this.goalSelector.addGoal(4, new MeleeAttackGoal(this, 1.0F, true) {
-			@Override
-			public boolean canUse() {
-				return getFirstPassenger() != null && super.canUse();
-			}
-
-			@Override
-			public boolean canContinueToUse() {
-				return getFirstPassenger() != null && super.canContinueToUse();
-			}
-
-			@Override
-			protected void checkAndPerformAttack(LivingEntity p_25557_, double p_25558_) {
-				double d0 = this.getAttackReachSqr(p_25557_);
-				if (p_25558_ <= d0) {
-					fireAttack();
-				}
-
-			}
-
-			protected double getAttackReachSqr(LivingEntity p_25556_) {
-				return (double) 64;
-			}
-		});
+		this.goalSelector.addGoal(4, new FireMeleeAttackGoal(this));
 	}
 
 	public boolean healItem(ItemStack itemstack) {
