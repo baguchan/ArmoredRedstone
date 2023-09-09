@@ -198,7 +198,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 		Vec3 vec31 = this.getLookAngle();
 		List<Entity> entities = Lists.newArrayList();
 		Vec3 vec32 = vec3.add(vec31.x * range, vec31.y * range, vec31.z * range);
-		AABB aabb = this.getBoundingBox().move(vec31.x() * (range), vec31.y() * (range), vec31.z() * (range)).inflate(range);
+		AABB aabb = this.getBoundingBox().move(vec31.x() * (range * 0.5F), vec31.y() * (range * 0.5F), vec31.z() * (range * 0.5F)).inflate(range);
 
 		for (Entity entity : this.level().getEntitiesOfClass(Entity.class, aabb)) {
 			if (entity.isAttackable() && entity != this && entity != this.getFirstPassenger()) {

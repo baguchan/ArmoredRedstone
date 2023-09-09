@@ -66,7 +66,7 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 			}
 
 			protected double getAttackReachSqr(LivingEntity p_25556_) {
-				return (double) (this.mob.getBbWidth() * 2.5F * this.mob.getBbWidth() * 2.5F + p_25556_.getBbWidth());
+				return (double) (this.mob.getBbWidth() * 1.5F * this.mob.getBbWidth() * 1.5F + p_25556_.getBbWidth());
 			}
 		});
 	}
