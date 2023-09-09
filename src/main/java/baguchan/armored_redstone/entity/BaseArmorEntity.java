@@ -362,9 +362,11 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
 
     protected void doPlayerRide(Player p_30634_) {
         if (!this.level().isClientSide) {
-            p_30634_.setYRot(this.getYRot());
-            p_30634_.setXRot(this.getXRot());
-            p_30634_.startRiding(this);
+            if (!this.hasControllingPassenger()) {
+                p_30634_.setYRot(this.getYRot());
+                p_30634_.setXRot(this.getXRot());
+                p_30634_.startRiding(this);
+            }
         }
 
     }

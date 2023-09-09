@@ -16,7 +16,7 @@ public class FireMeleeAttackGoal extends Goal {
     @Override
     public boolean canUse() {
         if (this.baseArmorEntity.getFirstPassenger() instanceof Mob passenger) {
-            return passenger.getTarget() != null && passenger.getTarget().isAlive();
+            return passenger.isAlive() && passenger.getTarget() != null && passenger.getTarget().isAlive();
         } else {
             return false;
         }
@@ -25,7 +25,7 @@ public class FireMeleeAttackGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         if (this.baseArmorEntity.getFirstPassenger() instanceof Mob passenger) {
-            return passenger.getTarget() != null && passenger.getTarget().isAlive();
+            return passenger.isAlive() && passenger.getTarget() != null && passenger.getTarget().isAlive();
         } else {
             return false;
         }
