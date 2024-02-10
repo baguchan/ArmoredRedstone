@@ -1,0 +1,18 @@
+{
+    "death.attack.armored_redstone.fire": "%1$s 被 %2$s 烧死了",
+    "death.attack.armored_redstone.soul_fire": "%1$s 被 %2$s 燃尽了灵魂",
+    "entity.armored_redstone.fire_armor": "纵火机甲",
+    "entity.armored_redstone.soul_fire_armor": "灵魂火机甲",
+    "entity.armored_redstone.piston_armor": "活塞机甲",
+    "entity.armored_redstone.redmons_armor": "巨兽机甲",
+    "item.armored_redstone.fire_armor": "纵火机甲",
+    "item.armored_redstone.soul_fire_armor": "灵魂火机甲",
+    "item.armored_redstone.piston_armor": "活塞机甲",
+    "item.armored_redstone.redmons_armor": "巨兽机甲",
+    "item.armored_redstone.conveyor": "输送机",
+    "item.armored_redstone.gold_conveyor": "金制输送机",
+    "item.armored_redstone.netherite_conveyor": "下界合金输送机",
+    "item.armored_redstone.wrench": "扳手",
+    "key.armored_redstone.fire": "攻击招式·一",
+    "key.armored_redstone.fire2": "攻击招式·二"
+  }
