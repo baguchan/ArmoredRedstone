@@ -2,14 +2,14 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "S": {
-      "item": "forge:rods/wooden"
+      "tag": "forge:rods/wooden"
     },
-    "I": {
-      "tag": "forge:ingots/iron"
+    "C": {
+      "tag": "forge:ingots/copper"
     }
   },
   "pattern": [
-    "I I",
+    "C C",
     " S ",
     " S "
   ],
