@@ -32,6 +32,7 @@ import net.minecraftforge.common.ForgeMod;
 
 public class FireArmorEntity extends BaseArmorEntity {
 	private static final EntityDataAccessor<Boolean> DATA_FIRE_ATTACK = SynchedEntityData.defineId(FireArmorEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> DATA_ATTACK = SynchedEntityData.defineId(FireArmorEntity.class, EntityDataSerializers.INT);
 
 	public FireArmorEntity(EntityType<? extends FireArmorEntity> p_20966_, Level p_20967_) {
 		super(p_20966_, p_20967_);
@@ -40,6 +41,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.entityData.define(DATA_FIRE_ATTACK, false);
+		this.entityData.define(DATA_ATTACK, 0);
 	}
 
 	@Override
@@ -77,11 +79,21 @@ public class FireArmorEntity extends BaseArmorEntity {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+		if (this.getAttackTick() < 20 && this.isFireAttack()) {
+			this.setAttackTick(this.getAttackTick() + 1);
+		} else if (this.getAttackTick() > 0 && !this.isFireAttack()) {
+			this.setAttackTick(0);
+		}
+	}
+
+	@Override
 	public void aiStep() {
 		super.aiStep();
 
 		// when breathing fire, spew particles
-		if (this.isFireAttack()) {
+		if (this.isFireAttack() && this.getAttackTick() >= 10) {
 			this.addFireParticle();
 			this.fireAttack();
 
@@ -102,7 +114,7 @@ public class FireArmorEntity extends BaseArmorEntity {
 			double py = this.getY() + this.getEyeHeight();
 			double pz = this.getZ() + f2 * 1.4F * direct;
 
-			for (Entity entity : this.pickEntitys(10, new Vec3(px, py, pz), 1F)) {
+			for (Entity entity : this.pickEntitys(12, new Vec3(px, py, pz), 1F)) {
 				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity)) {
 					if (entity instanceof LivingEntity) {
 						if (this.getFirstPassenger() instanceof Player) {
@@ -180,6 +192,15 @@ public class FireArmorEntity extends BaseArmorEntity {
 
 	public boolean isFireAttack() {
 		return this.entityData.get(DATA_FIRE_ATTACK);
+	}
+
+
+	public void setAttackTick(int tick) {
+		this.entityData.set(DATA_ATTACK, tick);
+	}
+
+	public int getAttackTick() {
+		return this.entityData.get(DATA_ATTACK);
 	}
 
 	private void attackingStart() {

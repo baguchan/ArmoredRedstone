@@ -92,7 +92,7 @@ public class RedMonsModel<T extends RedMonsArmorEntity> extends HierarchicalMode
 	@Override
 	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
-		this.animate(entity.attackAnimationState, RedMonsArmorAnimation.ATTACK, ageInTicks);
+		this.animate(entity.attackAnimationState, RedMonsArmorAnimation.attack, ageInTicks);
 		if (!entity.isSprinting() && entity.onGround()) {
 			this.RightLeg.xRot = Mth.cos(limbSwing * 0.6662F) * 1.2F * limbSwingAmount;
 			this.LeftLeg.xRot = Mth.cos(limbSwing * 0.6662F + (float) Math.PI) * 1.2F * limbSwingAmount;

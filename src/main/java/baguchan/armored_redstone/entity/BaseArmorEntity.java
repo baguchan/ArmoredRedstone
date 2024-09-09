@@ -265,9 +265,6 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
     }
 
     protected Vec3 getRiddenInput(Player p_278278_, Vec3 p_275506_) {
-        if (this.onGround() && this.playerJumpPendingScale == 0.0F && !this.allowStandSliding) {
-            return Vec3.ZERO;
-        } else {
             float f = p_278278_.xxa * 0.5F;
             float f1 = p_278278_.zza;
             if (f1 <= 0.0F) {
@@ -275,7 +272,7 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
             }
 
             return new Vec3((double) f, 0.0D, (double) f1);
-        }
+
     }
 
     protected float getRiddenSpeed(Player p_278336_) {
@@ -348,6 +345,9 @@ public abstract class BaseArmorEntity extends PathfinderMob implements PlayerRid
         } else {
             if (this.getHealth() < this.getMaxHealth() && this.healItem(itemstack)) {
                 this.heal(20);
+                if (!p_30713_.isCreative()) {
+                    itemstack.shrink(1);
+                }
                 this.playSound(SoundEvents.IRON_GOLEM_REPAIR);
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             }

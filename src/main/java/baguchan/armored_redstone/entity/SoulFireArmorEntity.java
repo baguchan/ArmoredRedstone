@@ -45,7 +45,7 @@ public class SoulFireArmorEntity extends FireArmorEntity {
 			double py = this.getY() + this.getEyeHeight();
 			double pz = this.getZ() + f2 * 1.4F * direct;
 
-			for (Entity entity : this.pickEntitys(10, new Vec3(px, py, pz), 1F)) {
+			for (Entity entity : this.pickEntitys(12, new Vec3(px, py, pz), 1F)) {
 				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
 					if (entity instanceof LivingEntity) {
 						if (this.getFirstPassenger() instanceof Player) {

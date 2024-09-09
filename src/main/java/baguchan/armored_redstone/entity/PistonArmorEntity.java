@@ -67,7 +67,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 	@Override
 	public void attack() {
 		if (this.getAttackTick() == 0) {
-			for (Entity entity : this.pickEntitys(4, this.getEyePosition())) {
+			for (Entity entity : this.pickEntitys(5, this.getEyePosition())) {
 				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
 					this.doHurtTarget(entity);
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);

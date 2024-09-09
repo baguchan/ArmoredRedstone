@@ -44,7 +44,7 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_) {
 		super.onSyncedDataUpdated(p_21104_);
 		if (DATA_ATTACK.equals(p_21104_)) {
-			if (this.getAttackTick() == 31) {
+			if (this.getAttackTick() == 20) {
 				this.attackAnimationState.start(this.tickCount);
 			}
 
@@ -59,6 +59,16 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		super.tick();
 		if (this.getAttackTick() > 0) {
 			this.setAttackTick(this.getAttackTick() - 1);
+		}
+
+		if (this.getAttackTick() == 10) {
+			for (Entity entity : this.pickEntitys(5, this.getEyePosition())) {
+				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
+					this.doHurtTarget(entity);
+					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
+				}
+			}
+			this.playSound(SoundEvents.ANVIL_HIT, this.getSoundVolume(), this.getVoicePitch());
 		}
 
 		if (this.getFirstPassenger() != null && this.getFirstPassenger() instanceof Mob) {
@@ -77,13 +87,7 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 	@Override
 	public void attack() {
 		if (this.getAttackTick() == 0) {
-			for (Entity entity : this.pickEntitys(4, this.getEyePosition())) {
-				if (entity != this && (this.getFirstPassenger() == null || this.getFirstPassenger() != null && entity != this.getFirstPassenger()) && !this.isAlliedTo(entity) && (entity.isAttackable())) {
-					this.doHurtTarget(entity);
-					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
-				}
-			}
-			this.setAttackTick(32);
+			this.setAttackTick(20);
 		}
 	}
 
@@ -120,12 +124,8 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		ArmoredRedstone.CHANNEL.sendToServer(new ArmorAttackMessage(this));
 	}
 
-	protected boolean isAttacked() {
-		return getAttackTick() > 0;
-	}
-
 	public static AttributeSupplier.Builder createAttributes() {
-		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.24D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 3D);
+		return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 200.0D).add(ForgeMod.ENTITY_GRAVITY.get(), 0.14F).add(Attributes.ARMOR, 16.0F).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.KNOCKBACK_RESISTANCE, 1.0D).add(Attributes.ATTACK_DAMAGE, 16.0D).add(Attributes.ATTACK_KNOCKBACK, 3D);
 	}
 
 	@Override
@@ -133,6 +133,7 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 		return true;
 	}
 
+	@Override
 	public boolean hasSprintUnique() {
 		return false;
 	}
