@@ -73,7 +73,7 @@ public class PistonArmorEntity extends BaseArmorEntity {
 					entity.playSound(SoundEvents.PLAYER_ATTACK_KNOCKBACK, 2.0F, 1.0F);
 				}
 			}
-			this.setAttackTick(24);
+			this.setAttackTick(25);
 			this.playSound(SoundEvents.PISTON_EXTEND, 1.0F, 1.15F);
 		}
 	}

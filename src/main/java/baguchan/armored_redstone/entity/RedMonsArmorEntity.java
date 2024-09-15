@@ -87,7 +87,7 @@ public class RedMonsArmorEntity extends BaseArmorEntity {
 	@Override
 	public void attack() {
 		if (this.getAttackTick() == 0) {
-			this.setAttackTick(20);
+			this.setAttackTick(21);
 		}
 	}
 
